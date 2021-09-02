@@ -1,8 +1,9 @@
 #!/bin/bash
 
-HOMEDIR=/afs/cern.ch/user/p/pellicci/work/ZThreeGamma/Production/CMSSW_10_6_17_patch1/src
+HOMEDIR=/afs/cern.ch/user/p/pellicci/work/ZThreeGamma/Production/CMSSW_10_6_17_patch1/src/StandardModel/ZThreeGamma/generation
 CMSSW_TO_USE=CMSSW_10_6_17
-INPUTFILE=SIM_root/ZThreeGamma_
+INPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2016/SIM
+OUTPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2016/DIGI
 PYTHONAME=ZToThreeGamma_DIGI_2016_cfg.py
 
 #this is necessary only if EOS access is required
@@ -51,6 +52,9 @@ randSvc.populate()
 EOF
 
 jobNumber=$(($3+$OFFSET));
-cmsRun $PYTHONAME $NEVENTS $HOMEDIR/$INPUTFILE${jobNumber}.root
-pwd
-cp process.root $HOMEDIR/root/${OUTPUT}_${jobNumber}.root
+
+xrdcp $INPUTDIR/ZThreeGamma_${jobNumber}.root .
+
+cmsRun $PYTHONAME $NEVENTS ZThreeGamma_${jobNumber}.root
+
+xrdcp process.root $OUTPUTDIR/${OUTPUT}_${jobNumber}.root
