@@ -1,19 +1,16 @@
 #!/bin/bash
 
-HOMEDIR=/afs/cern.ch/user/p/pellicci/work/ZThreeGamma/Production/CMSSW_8_0_33_UL/src/StandardModel/ZThreeGamma/generation
-CMSSW_TO_USE=CMSSW_8_0_33_UL
-INPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2016/DIGI
-OUTPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2016/HLT
-PYTHONAME=ZToThreeGamma_HLT_2016_cfg.py
+HOMEDIR=/afs/cern.ch/user/p/pellicci/work/ZThreeGamma/Production/CMSSW_10_6_17_patch1/src/StandardModel/ZThreeGamma/generation
+CMSSW_TO_USE=CMSSW_10_6_17_patch1
+INPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2016/RECO
+OUTPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2016/MINI
+PYTHONAME=ZToThreeGamma_MINI_2016_cfg.py
 
 NEVENTS=$1
 FILENAME=$2
 
 #this is necessary only if EOS access is required
 export X509_USER_PROXY=/afs/cern.ch/user/p/pellicci/voms_proxy/x509up_u28550
-
-#voms-proxy-info -all
-#voms-proxy-info -all -file $X509_USER_PROXY
 
 if [ "$1" == "" ]; then
  echo "Specify number of events and base output file, eg: source testScript_queue.sh 50 test"
@@ -54,7 +51,5 @@ EOF
 jobNumber=$(($3+$OFFSET));
 
 xrdcp $INPUTDIR/${FILENAME}_${jobNumber}.root .
-
 cmsRun $PYTHONAME $NEVENTS ${FILENAME}_${jobNumber}.root
-
 xrdcp process.root $OUTPUTDIR/${FILENAME}_${jobNumber}.root
