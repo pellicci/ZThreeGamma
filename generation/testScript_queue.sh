@@ -1,7 +1,7 @@
 #!/bin/bash
 
-HOMEDIR=/afs/cern.ch/user/p/pellicci/work/ZThreeGamma/Production/CMSSW_10_6_19_patch2/src/StandardModel/ZThreeGamma/generation
-CMSSW_TO_USE=CMSSW_10_6_19_patch2
+HOMEDIR=/afs/cern.ch/user/p/pellicci/work/ZThreeGamma/Production/CMSSW_10_6_27/src/StandardModel/ZThreeGamma/generation
+CMSSW_TO_USE=CMSSW_10_6_27
 INPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2016/MINI
 OUTPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2016/NANO
 PYTHONAME=ZToThreeGamma_NANO_2016_cfg.py
@@ -28,7 +28,7 @@ fi
 export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch
 source $VO_CMS_SW_DIR/cmsset_default.sh
 
-#export SCRAM_ARCH=slc7_amd64_gcc820
+export SCRAM_ARCH=slc7_amd64_gcc820
 if [ -r $CMSSW_TO_USE/src ] ; then 
  echo release $CMSSW_TO_USE already exists
 else
