@@ -2,10 +2,8 @@
 # using: 
 # Revision: 1.19 
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
-# with command line options: --python_filename ZToThreeGamma_NANO_2016_cfg2.py --eventcontent NANOEDMAODSIM --datatier NANOAODSIM --fileout file:process.root --conditions 106X_mcRun2_asymptotic_preVFP_v11 --step NANO --filein process.root --era Run2_2016,run2_nanoAOD_106Xv1 --no_exec --mc -n 10
+# with command line options: --python_filename ZToThreeGamma_NANO_2016_2_cfg.py --eventcontent NANOAODSIM --datatier NANOAODSIM --fileout file:process.root --conditions 106X_mcRun2_asymptotic_preVFP_v9 --step NANO --filein file:ZThreeGamma_0.root --era Run2_2016,run2_nanoAOD_106Xv1 --no_exec --mc -n 10
 import FWCore.ParameterSet.Config as cms
-
-import sys
 
 from Configuration.Eras.Era_Run2_2016_cff import Run2_2016
 from Configuration.Eras.Modifier_run2_nanoAOD_106Xv1_cff import run2_nanoAOD_106Xv1
@@ -229,9 +227,8 @@ process.source = cms.Source("PoolSource",
 'file:/afs/cern.ch/user/p/pellicci/cernbox/ZThreeGamma_root/2016/MINI/ZThreeGamma_96.root',
 'file:/afs/cern.ch/user/p/pellicci/cernbox/ZThreeGamma_root/2016/MINI/ZThreeGamma_97.root',
 'file:/afs/cern.ch/user/p/pellicci/cernbox/ZThreeGamma_root/2016/MINI/ZThreeGamma_98.root',
-'file:/afs/cern.ch/user/p/pellicci/cernbox/ZThreeGamma_root/2016/MINI/ZThreeGamma_99.root',
+'file:/afs/cern.ch/user/p/pellicci/cernbox/ZThreeGamma_root/2016/MINI/ZThreeGamma_99.root'
     ),
-
     secondaryFileNames = cms.untracked.vstring()
 )
 
@@ -248,7 +245,7 @@ process.configurationMetadata = cms.untracked.PSet(
 
 # Output definition
 
-process.NANOEDMAODSIMoutput = cms.OutputModule("PoolOutputModule",
+process.NANOAODSIMoutput = cms.OutputModule("NanoAODOutputModule",
     compressionAlgorithm = cms.untracked.string('LZMA'),
     compressionLevel = cms.untracked.int32(9),
     dataset = cms.untracked.PSet(
@@ -263,15 +260,15 @@ process.NANOEDMAODSIMoutput = cms.OutputModule("PoolOutputModule",
 
 # Other statements
 from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag = GlobalTag(process.GlobalTag, '106X_mcRun2_asymptotic_preVFP_v11', '')
+process.GlobalTag = GlobalTag(process.GlobalTag, '106X_mcRun2_asymptotic_preVFP_v9', '')
 
 # Path and EndPath definitions
 process.nanoAOD_step = cms.Path(process.nanoSequenceMC)
 process.endjob_step = cms.EndPath(process.endOfProcess)
-process.NANOEDMAODSIMoutput_step = cms.EndPath(process.NANOEDMAODSIMoutput)
+process.NANOAODSIMoutput_step = cms.EndPath(process.NANOAODSIMoutput)
 
 # Schedule definition
-process.schedule = cms.Schedule(process.nanoAOD_step,process.endjob_step,process.NANOEDMAODSIMoutput_step)
+process.schedule = cms.Schedule(process.nanoAOD_step,process.endjob_step,process.NANOAODSIMoutput_step)
 from PhysicsTools.PatAlgos.tools.helpers import associatePatAlgosToolsTask
 associatePatAlgosToolsTask(process)
 
