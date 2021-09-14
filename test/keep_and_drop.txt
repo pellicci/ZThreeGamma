@@ -1,0 +1,27 @@
+# this is a comment
+drop * # start with all
+keep Electron_pt
+keep Electron_eta
+keep Electron_phi
+keep Electron_mass
+keep Electron_deltaEtaSC
+keep Muon_pt
+keep Muon_eta
+keep Muon_phi
+keep Muon_mass
+keep Muon_pfRelIso04_all
+keep Muon_triggerIdLoose
+keep Jet_pt
+keep Jet_eta
+keep Jet_phi
+keep Jet_mass
+keep Jet_jetId
+keep Jet_puId
+keep Jet_btagDeepB
+keep HLT_*Photon*
+keep HLT_*photon*
+keep genWeight*
+keep PuppiMET*
+keep PV_npvs*
+keep Photon_*
+keep M_threegam
