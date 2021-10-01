@@ -3,6 +3,22 @@ import os
 import sys
 import ROOT
 
+inputfile = []
+if len(sys.argv) > 2 :
+    inputfile = [sys.argv[2]]
+else :
+    inputfile = ['/afs/cern.ch/user/p/pellicci/cernbox/ZThreeGamma_root/2016/NANO/ZThreeGamma_NANO.root']
+
+print inputfile
+
+isData_string = sys.argv[1]
+isData = False
+if isData_string == "data" :
+    isData = True
+    print "Running on a data sample"
+else :
+    print "Running on a MC sample"
+
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
 #from PhysicsTools.NanoAODTools.postprocessing.framework.crabhelper import inputFiles,runsAndLumis
 
@@ -70,6 +86,8 @@ class exampleProducer(Module):
 
             ph_3mass = (ph1_4mom + ph2_4mom + ph3_4mom).M()
 
+            ########################################
+            #These are just counters for signal studies
             if (ph1_4mom.Pt() > 20. and ph2_4mom.Pt() > 20. and ph3_4mom.Pt() > 20.) :
                 self.N_run3low += 1
 
@@ -90,6 +108,7 @@ class exampleProducer(Module):
 
         if (HLT.Photon36_R9Id90_HE10_IsoM or HLT.Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55) :
             self.N_ORtrigger += 1
+        ########################################
 
         ####here starts the actual selection
         if self.runningEra == 0 and not (HLT.Photon36_R9Id90_HE10_IsoM or HLT.Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55) :
@@ -128,7 +147,7 @@ class exampleProducer(Module):
             return False
         self.histcount.Fill(5)
 
-        if not (photons[0].mvaID_WP80 and photons[1].mvaID_WP90 and photons[2].mvaID_WP90) :
+        if not (photons[0].mvaID_WP80 and photons[1].mvaID_WP80 and photons[2].mvaID_WP90) :
             return False
         self.histcount.Fill(6)
 
@@ -140,11 +159,12 @@ class exampleProducer(Module):
 
         return True
 
-inputfile = ['/afs/cern.ch/user/p/pellicci/cernbox/ZThreeGamma_root/2016/NANO/ZThreeGamma_NANO.root']
-#inputfile = ['/afs/cern.ch/user/p/pellicci/work/ZThreeGamma/CMSSW_10_6_27/src/StandardModel/ZThreeGamma/test/4C08107E-ECEF-C647-B3CA-2F1248A41A60.root']
-#p=PostProcessor(".",inputfile,"",modules=[exampleProducer(),puAutoWeight_2016()],provenance=True,fwkJobReport=True,jsonInput=runsAndLumis(),outputbranchsel="keep_and_drop.txt")
-p=PostProcessor(".",inputfile,"",modules=[exampleProducer(0),puAutoWeight_2016()],provenance=True,fwkJobReport=True,outputbranchsel="keep_and_drop.txt")
+if isData :
+    p=PostProcessor(".",inputfile,"",modules=[exampleProducer(0)],provenance=True,fwkJobReport=True,outputbranchsel="keep_and_drop.txt")
+    p.run()
+else :
+    p=PostProcessor(".",inputfile,"",modules=[exampleProducer(0),puAutoWeight_2016()],provenance=True,fwkJobReport=True,outputbranchsel="keep_and_drop.txt")
+    p.run()
 
-p.run()
 
 print "DONE"
