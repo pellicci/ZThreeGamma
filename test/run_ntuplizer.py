@@ -36,9 +36,7 @@ class exampleProducer(Module):
         pass
     def beginJob(self):
         self.N_totevents = 0.
-        self.N_Ph36_Id90_HE10_IsoM = 0.
-        self.N_Diphoton30_18_PV = 0.
-        self.N_ORtrigger = 0.
+        self.N_Diphoton30_18 = 0.
         self.N_run3low = 0.
         self.N_run3high = 0.
         self.N_run3OR = 0.
@@ -46,9 +44,7 @@ class exampleProducer(Module):
         pass
     def endJob(self):
         print "Total number of processed events = ", self.N_totevents
-        print "Efficiency of single lepton trigger = ", self.N_Ph36_Id90_HE10_IsoM/self.N_totevents
-        print "Efficiency of double lepton trigger = ", self.N_Diphoton30_18_PV/self.N_totevents
-        print "Efficiency of the OR = ", self.N_ORtrigger/self.N_totevents
+        print "Efficiency of double photon trigger = ", self.N_Diphoton30_18/self.N_totevents
         print "Efficiency for run 3 lower trigger = ", self.N_run3low/self.N_totevents
         print "Efficiency for run 3 higher trigger = ", self.N_run3high/self.N_totevents
         print "Efficiency for run 3 OR = ", self.N_run3OR/self.N_totevents
@@ -59,6 +55,17 @@ class exampleProducer(Module):
         self.out.branch("M_threegam",  "F");
         self.histcount = ROOT.TH1F("histocount","Counter of passed events",10,-0.5,9.5)
         self.photoncount = ROOT.TH1F("photoncount","Counter of passed photons",10,-0.5,9.5)
+
+        self.histcount.GetXaxis().SetBinLabel(1,"Initial eff")
+        self.histcount.GetXaxis().SetBinLabel(2,"Trigger")
+        self.histcount.GetXaxis().SetBinLabel(3,"Muon veto")
+        self.histcount.GetXaxis().SetBinLabel(4,"N_{#gamma} > 2")
+        self.histcount.GetXaxis().SetBinLabel(5,"E_{T,#gamma} cuts")
+        self.histcount.GetXaxis().SetBinLabel(6,"m_{#gamma#gamma#gamma} > 60")
+        self.histcount.GetXaxis().SetBinLabel(7,"Tight+Loose+Loose")
+        self.histcount.GetXaxis().SetBinLabel(8,"Pixel seed veto")
+        self.histcount.GetXaxis().SetBinLabel(9,"m_{XY} < 100")
+
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         outputFile.cd()
         self.histcount.Write()
@@ -100,18 +107,14 @@ class exampleProducer(Module):
             if (ph1_4mom.Pt() > 20. and ph2_4mom.Pt() > 20. and ph3_4mom.Pt() > 10. and ph_3mass > 55.) :
                 self.N_run3new += 1
 
-        if HLT.Photon36_R9Id90_HE10_IsoM :
-            self.N_Ph36_Id90_HE10_IsoM += 1
+        if HLT.Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55 or HLT.Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55:
+            self.N_Diphoton30_18 += 1
 
-        if HLT.Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55 :
-            self.N_Diphoton30_18_PV += 1
-
-        if (HLT.Photon36_R9Id90_HE10_IsoM or HLT.Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55) :
-            self.N_ORtrigger += 1
         ########################################
 
         ####here starts the actual selection
-        if self.runningEra == 0 and not (HLT.Photon36_R9Id90_HE10_IsoM or HLT.Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55) :
+        #if self.runningEra == 0 and not (HLT.Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55 or HLT.Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55) :
+        if self.runningEra == 0 and not HLT.Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55 :
             return False
         self.histcount.Fill(1)
 
@@ -122,7 +125,6 @@ class exampleProducer(Module):
         if len(photons) < 3 :
             return False
         self.histcount.Fill(3)
-
 
         N_photons_select = 0.
         for photoncount in xrange(len(photons)) :
@@ -147,7 +149,7 @@ class exampleProducer(Module):
             return False
         self.histcount.Fill(5)
 
-        if not (photons[0].mvaID_WP80 and photons[1].mvaID_WP80 and photons[2].mvaID_WP90) :
+        if not (photons[0].mvaID_WP80 and photons[1].mvaID_WP90 and photons[2].mvaID_WP90) :
             return False
         self.histcount.Fill(6)
 
@@ -155,7 +157,15 @@ class exampleProducer(Module):
             return False
         self.histcount.Fill(7)
 
+        Fourmom_12 = ph1_4mom + ph2_4mom
+        Fourmom_13 = ph1_4mom + ph3_4mom
+        Fourmom_23 = ph2_4mom + ph3_4mom
+
+        if Fourmom_12.M() > 100. or Fourmom_13.M() > 100. or Fourmom_23.M() > 100. :
+            return False
+
         self.out.fillBranch("M_threegam",ph_3mass)
+        self.histcount.Fill(8)
 
         return True
 

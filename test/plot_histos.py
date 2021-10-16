@@ -1,33 +1,48 @@
-import copy
 import ROOT
+import math
+import copy
+import sys
 
-#open the input files
-filelist_2016 = dict()
+#Supress the opening of many Canvas's
+ROOT.gROOT.SetBatch(True)   
 
-filelist_2016["Signal"]       = ROOT.TFile("histos/ZThreeGamma_Signal.root")
-filelist_2016["DYJetsToLL"]   = ROOT.TFile("histos/ZThreeGamma_DYJetsToLL.root")
-filelist_2016["DiPhotonJets"] = ROOT.TFile("histos/ZThreeGamma_DiPhotonJets.root")
-filelist_2016["ZGToLLG_01J"]  = ROOT.TFile("histos/ZThreeGamma_ZGToLLG_01J.root")
+signal_magnify = 10.
+CR_magnify = 1. #2079./1179.
 
-colors_mask = dict()
-colors_mask["DYJetsToLL"]         = ROOT.kAzure+7
-colors_mask["DiPhotonJets"]       = ROOT.kViolet-6
-colors_mask["ZGToLLG_01J"]        = ROOT.kMagenta+1
+list_inputfiles = []
+inputnames = ["Signal","data","GJets","ZGToLLG01J","DYJetsToLL","CR1","CR3"]
+#inputnames = ["Signal","data","GJets","ZGToLLG01J","DYJetsToLL","DiPhotonJets"]
+for inputname in inputnames:
+	list_inputfiles.append("histos/ZThreeGamma_" + inputname + ".root")
+
+hstack  = dict()
+hsignal = dict()
+hdata   = dict()
+canvas  = dict()
+histo_container = [] #just for memory management
 
 #Get the list of histograms
-histo_list = []
-keylist = (list(filelist_2016.values())[0]).GetListOfKeys()
+list_histos = []
+signalfile = ROOT.TFile("histos/ZThreeGamma_Signal.root")
+keylist = signalfile.GetListOfKeys()
 key = ROOT.TKey()
 for key in keylist :
 	obj_class = ROOT.gROOT.GetClass(key.GetClassName())
 	if not obj_class.InheritsFrom("TH1") :
 		continue
-	histo_list.append( key.ReadObj().GetName() )
+	list_histos.append( key.ReadObj().GetName() )
 
-hstack = dict()
-hsignal = dict()
-for histo_key in histo_list :
-    hstack[histo_key] = ROOT.THStack("hstack_" + histo_key,"")
+for hname in list_histos:
+	hstack[hname] = ROOT.THStack("hstack_" + hname,"")
+
+# Color mask
+colors_mask = dict()
+colors_mask["DYJetsToLL"]   = ROOT.kAzure+7
+colors_mask["DiPhotonJets"] = ROOT.kViolet-6
+colors_mask["ZGToLLG01J"]   = ROOT.kMagenta+1
+colors_mask["CR3"]          = ROOT.kOrange+1
+colors_mask["GJets"]        = ROOT.kGreen-7
+colors_mask["CR1"]          = ROOT.kBlue-7
 
 #Eyecandy
 leg1 = ROOT.TLegend(0.6868687,0.6120093,0.9511784,0.9491917) #right positioning
@@ -39,43 +54,210 @@ leg1.SetLineStyle(1)
 leg1.SetLineWidth(1)
 leg1.SetFillStyle(1001)
 
-for fileobj in filelist_2016 :
-	if fileobj == "Signal" :
-		continue
-	for histo_key in hstack :
+for filename in list_inputfiles:
+	fileIn = ROOT.TFile(filename)
 
-		#for memory management
-		print histo_key
-		histo_container = copy.copy(filelist_2016[fileobj].Get(histo_key))
+	sample_name = (filename.split("_")[1])[:-5]
+	for histo_name in list_histos:
+		histo = fileIn.Get(histo_name)
 
-		histo_container.SetFillColor(colors_mask[fileobj])
+		# Set to 0 the bins containing negative values, due to negative weights
+		hsize = histo.GetSize() - 2 # GetSize() returns the number of bins +2 (that is + overflow + underflow) 
+		for bin in range(1,hsize+1): # The +1 is in order to get the last bin
+			bincontent = histo.GetBinContent(bin)
+			if bincontent < 0.:
+				histo.SetBinContent(bin,0.)
 
-		histo_container.Rebin(2)
+		histo_container.append(copy.copy(histo))
 
-		hstack[histo_key].Add(histo_container)
+		if not "h_N" in histo_name :
+			histo_container[-1].Rebin(2)
 
-		if histo_key == "h_threegammass" :
-			leg1.AddEntry(histo_container, fileobj,"f")
+		if "Signal" in sample_name:
+			histo_container[-1].SetLineStyle(2)   #dashed
+			histo_container[-1].SetLineColor(2)   #red
+			histo_container[-1].SetLineWidth(4)   #kind of thick
+			hsignal[histo_name] = histo_container[-1]
+		elif "data" in sample_name:
+			histo_container[-1].SetMarkerStyle(20)   #point
+			hdata[histo_name] = histo_container[-1]
+		else:
+			histo_container[-1].SetFillColor(colors_mask[sample_name])
+			histo_container[-1].SetLineColor(colors_mask[sample_name])
+			hstack[histo_name].Add(histo_container[-1])
 
-for histo_key in histo_list :
-	histo_container = copy.copy(filelist_2016["Signal"].Get(histo_key))
-	histo_container.Rebin(2)
-	histo_container.SetLineStyle(2)   #dashed
-	histo_container.SetLineWidth(4)   #kind of thick
+		if "threegammas" in histo_name : #Add the legend only once (gammaet is just a random variable)
 
-	hsignal[histo_key] = histo_container
+			if not sample_name == "data" and not sample_name == "Signal":
+				leg1.AddEntry(histo_container[-1],sample_name,"f")
+			elif sample_name == "data":
+				leg1.AddEntry(histo_container[-1],sample_name,"ep")
+			elif sample_name == "Signal":
+				leg1.AddEntry(histo_container[-1],"Signal (SMx10^{5})","f")
 
-	if histo_key == "h_threegammass" :
-			leg1.AddEntry(histo_container,"Signal","f")
+	fileIn.Close()
 
+for histo_name in list_histos:
 
+	canvas[histo_name] = ROOT.TCanvas("Canvas_" + histo_name,"",200,106,600,600)
+	canvas[histo_name].cd()
+ 
+	##########################################
+	pad1 = ROOT.TPad("pad_" + histo_name,"",0,0.28,1,1.)
+	pad2 = ROOT.TPad("pad_" + histo_name,'',0,0.01,1,0.27)
+	pad1.SetTopMargin(0.047)
+	pad1.SetBottomMargin(0.02)
+	pad1.SetBorderMode(0)
+	pad1.SetBorderSize(0)
+	pad1.SetFrameBorderSize(0)
+	pad2.SetBorderSize(0)
+	pad2.SetFrameBorderSize(0)
+	pad2.SetBottomMargin(0.3)
+	pad2.SetBorderMode(0)
+	pad1.Draw()
+	pad2.Draw()
+	##########################################
+	pad1.cd()
+	hstack[histo_name].SetTitle("")
+	hstack[histo_name].Draw("histo")
+	hstack[histo_name].GetYaxis().SetTitleSize(0.07)
+	hstack[histo_name].GetYaxis().SetTitleOffset(0.7)
+	hstack[histo_name].GetYaxis().SetTitle("Events")
 
-for histo_key in histo_list :
-	canvas = ROOT.TCanvas("Cavas_" + histo_key,"",200,106,600,600)
-	canvas.cd()
-	hstack[histo_key].SetTitle("")
-	hstack[histo_key].Draw("histo")
-	hsignal[histo_key].Draw("SAME,hist")
+	##########################################
+	#hstack[histo_name].GetXaxis().SetTickLength(0)
+	hstack[histo_name].GetXaxis().SetLabelOffset(999)
+	##########################################
+
+	if hdata[histo_name].GetMaximum() > hstack[histo_name].GetMaximum() :
+		hstack[histo_name].SetMaximum(hdata[histo_name].GetMaximum())
+
+	if histo_name == "h_m12" :
+		hstack[histo_name].SetMaximum(1600.)
+		hstack[histo_name].GetXaxis().SetTitle("m_{12} (GeV)")
+
+	if histo_name == "h_m13" :
+		hstack[histo_name].SetMaximum(1600.)
+		hstack[histo_name].GetXaxis().SetTitle("m_{13} (GeV)")
+
+	if histo_name == "h_m23" :
+		hstack[histo_name].SetMaximum(1600.)
+		hstack[histo_name].GetXaxis().SetTitle("m_{23} (GeV)")
+
+	if histo_name == "h_phot1_ET" :
+		hstack[histo_name].SetMaximum(2400.)
+		hstack[histo_name].GetXaxis().SetTitle("E_{T,1} (GeV)")
+
+	if histo_name == "h_phot2_ET" :
+		hstack[histo_name].SetMaximum(2400.)
+		hstack[histo_name].GetXaxis().SetTitle("E_{T,2} (GeV)")
+
+	if histo_name == "h_phot2_ET" :
+		hstack[histo_name].SetMaximum(2400.)
+		hstack[histo_name].GetXaxis().SetTitle("E_{T,3} (GeV)")
+
+	if histo_name == "h_threegammass" :
+		hstack[histo_name].SetMaximum(1000.)
+		hstack[histo_name].GetXaxis().SetTitle("m_{#gamma#gamma#gamma} (GeV)")
+
+	if histo_name == "h_r9_1" :
+		hstack[histo_name].GetXaxis().SetTitle("r_{9,1}")
+
+	if histo_name == "h_r9_2" :
+		hstack[histo_name].GetXaxis().SetTitle("r_{9,2}")
+
+	if histo_name == "h_r9_3" :
+		hstack[histo_name].SetMaximum(2500.)
+		hstack[histo_name].GetXaxis().SetTitle("r_{9,3}")
+
+	if histo_name == "h_hoe_1" :
+		hstack[histo_name].GetXaxis().SetTitle("(H/E)_{1}")
+
+	if histo_name == "h_hoe_2" :
+		hstack[histo_name].GetXaxis().SetTitle("(H/E)_{2}")
+
+	if histo_name == "h_hoe_3" :
+		hstack[histo_name].GetXaxis().SetTitle("(H/E)_{3}")
+
+	if histo_name == "h_NPhotons" :
+		hstack[histo_name].GetXaxis().SetTitle("N_{#gamma}")
+
+	if "h_NJet" in histo_name :
+		hstack[histo_name].GetXaxis().SetTitle("N_{jets}")
+
+	if signal_magnify != 1:
+		hsignal[histo_name].Scale(signal_magnify)      
+
+	hstack[histo_name].Draw("SAME,histo")
+	hsignal[histo_name].Draw("SAME,hist")
+	hdata[histo_name].Draw("SAME,E1,X0")
+
+	hMCErr = copy.deepcopy(hstack[histo_name].GetStack().Last())
+	hMCErr_size = hMCErr.GetSize() - 2
+	hMCErr.SetFillStyle(3005)
+	hMCErr.SetMarkerStyle(0)
+	hMCErr.SetFillColor(ROOT.kBlack)
+	hMCErr.SetLineColor(0)
+	hMCErr.Draw("sameE2")
+
+	if "threegamma" in histo_name :#Add the legend only once
+		leg1.AddEntry(hMCErr,"Bkg unc","f")
 	leg1.Draw()
-	canvas.SaveAs("plots/" + histo_key + ".gif")
 
+	################################################
+	pad2.cd()
+	pad2.SetTopMargin(0.03)
+	pad2.SetFillColor(0)
+	pad2.SetFillStyle(0)
+	ROOT.gStyle.SetOptStat(0)
+	totalMC = copy.deepcopy(hMCErr)
+	totalData = copy.deepcopy(hdata[histo_name])
+	totalData_forErrors = copy.deepcopy(hdata[histo_name])
+	totalData.Divide(totalMC)
+
+	for bin in range(1,hMCErr_size+1):
+		
+		#Set MC error band to MC relative uncertainty
+		if not totalMC.GetBinContent(bin) == 0:
+			new_MC_BinError = totalMC.GetBinError(bin)/totalMC.GetBinContent(bin)
+		else:
+			new_MC_binError = 0.
+
+		#Set data/MC ratio points error bar to data relative uncertainty
+		if not totalData_forErrors.GetBinContent(bin) == 0:
+			new_Data_BinError = totalData_forErrors.GetBinError(bin)/totalData_forErrors.GetBinContent(bin)
+		else:
+			new_Data_BinError = 0.
+
+		totalMC.SetBinError(bin,new_MC_BinError)
+		totalMC.SetBinContent(bin,1.)
+		totalData.SetBinError(bin,new_Data_BinError)
+	
+	totalData.SetTitle("")
+	totalData.SetMarkerStyle(8)
+	totalData.SetMarkerColor(1)
+	totalData.SetLineColor(1)
+	totalData.GetYaxis().SetLabelSize(0.1)
+	totalData.GetYaxis().SetTitle("Data/MC")
+	totalData.GetYaxis().SetTitleSize(0.16)
+	totalData.GetYaxis().SetTitleOffset(0.3)
+	totalData.GetYaxis().SetRangeUser(0.,2.)
+	totalData.GetYaxis().SetNdivisions(502,ROOT.kFALSE)
+	totalData.GetXaxis().SetLabelSize(0.10)
+	totalData.GetXaxis().SetTitleSize(0.12)
+	totalData.GetXaxis().SetTitleOffset(1.0)
+	totalData.GetXaxis().SetTitle(hstack[histo_name].GetXaxis().GetTitle())
+
+	totalMC.SetTitle("")
+	totalMC.SetFillStyle(3002)
+
+	line_on_one = ROOT.TLine(totalData.GetXaxis().GetXmin(),1.,totalData.GetXaxis().GetXmax(),1.)
+	line_on_one.SetLineColor(4)
+	line_on_one.SetLineStyle(2)
+
+	totalData.Draw("E1,X0")
+	totalMC.Draw("sameE2")
+	line_on_one.Draw("SAME")
+	################################################
+
+	canvas[histo_name].SaveAs("plots/" + histo_name + ".pdf")

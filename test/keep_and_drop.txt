@@ -27,3 +27,4 @@ keep PV_npvs*
 keep Photon_*
 keep M_threegam
 keep puWeight
+keep IsoTrack_*
