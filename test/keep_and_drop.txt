@@ -28,3 +28,5 @@ keep Photon_*
 keep M_threegam
 keep puWeight
 keep IsoTrack_*
+keep run*
+keep luminosityBlock*

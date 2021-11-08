@@ -20,7 +20,6 @@ else :
     print "Running on a MC sample"
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
-#from PhysicsTools.NanoAODTools.postprocessing.framework.crabhelper import inputFiles,runsAndLumis
 
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
@@ -61,8 +60,8 @@ class exampleProducer(Module):
         self.histcount.GetXaxis().SetBinLabel(3,"Muon veto")
         self.histcount.GetXaxis().SetBinLabel(4,"N_{#gamma} > 2")
         self.histcount.GetXaxis().SetBinLabel(5,"E_{T,#gamma} cuts")
-        self.histcount.GetXaxis().SetBinLabel(6,"m_{#gamma#gamma#gamma} > 60")
-        self.histcount.GetXaxis().SetBinLabel(7,"Tight+Loose+Loose")
+        self.histcount.GetXaxis().SetBinLabel(6,"m_{#gamma#gamma} > 40 or < 110")
+        self.histcount.GetXaxis().SetBinLabel(7,"Loose+Loose")
         self.histcount.GetXaxis().SetBinLabel(8,"Pixel seed veto")
         self.histcount.GetXaxis().SetBinLabel(9,"m_{XY} < 100")
 
@@ -113,12 +112,16 @@ class exampleProducer(Module):
         ########################################
 
         ####here starts the actual selection
-        #if self.runningEra == 0 and not (HLT.Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55 or HLT.Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55) :
-        if self.runningEra == 0 and not HLT.Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55 :
+        if self.runningEra < 2 and not (HLT.Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55 or HLT.Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55) :
             return False
         self.histcount.Fill(1)
 
-        if len(muons) > 0 :
+        N_muonscount = 0
+        for muoncount in xrange(len(muons)) :
+            if not muons[muoncount].isGlobal :
+                continue
+            N_muonscount = N_muonscount + 1
+        if N_muonscount > 0 :
             return False
         self.histcount.Fill(2)
 
@@ -141,7 +144,7 @@ class exampleProducer(Module):
         ph2_4mom = photons[1].p4()
         ph3_4mom = photons[2].p4()
 
-        if (ph1_4mom.Pt() < 30. or ph2_4mom.Pt() < 18. or ph3_4mom.Pt() < 5.) : 
+        if (ph1_4mom.Pt() < 30. or ph2_4mom.Pt() < 18. or ph3_4mom.Pt() < 10.) : 
             return False
         self.histcount.Fill(4)
 
@@ -149,7 +152,7 @@ class exampleProducer(Module):
             return False
         self.histcount.Fill(5)
 
-        if not (photons[0].mvaID_WP80 and photons[1].mvaID_WP90 and photons[2].mvaID_WP90) :
+        if not (photons[0].mvaID_WP90 and photons[1].mvaID_WP90 and photons[2].mvaID_WP90) :
             return False
         self.histcount.Fill(6)
 
@@ -161,11 +164,11 @@ class exampleProducer(Module):
         Fourmom_13 = ph1_4mom + ph3_4mom
         Fourmom_23 = ph2_4mom + ph3_4mom
 
-        if Fourmom_12.M() > 100. or Fourmom_13.M() > 100. or Fourmom_23.M() > 100. :
+        if Fourmom_12.M() > 110. or Fourmom_13.M() > 110. or Fourmom_23.M() > 110. :
             return False
+        self.histcount.Fill(8)
 
         self.out.fillBranch("M_threegam",ph_3mass)
-        self.histcount.Fill(8)
 
         return True
 

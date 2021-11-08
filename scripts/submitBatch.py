@@ -17,7 +17,7 @@ output_dir = '/eos/user/p/pellicci/ZThreeGamma_root/2016/skimprocess/'
 # -----------------------------
 samplesDict = {}
 
-nEvtPerJob = 0.7 # faster jobs, # in unit of 1e6 , 5-10 are good settings. 
+nEvtPerJob = 0.4 # faster jobs, # in unit of 1e6 , 5-10 are good settings. 
 
 #################################################
 #                                               #
@@ -49,12 +49,6 @@ samplesDict['2016'] = [
     ]
 
 samplesDict['2016_MC'] = [ 
-    bm.JobConfig( dataset='/GJets_HT-40To100_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODv2-106X_mcRun2_asymptotic_v15-v1/NANOAODSIM',
-        nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v2_GJets40To100')
-    ]
-
-
-"""
     bm.JobConfig( dataset='/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL16NanoAODAPVv2-106X_mcRun2_asymptotic_preVFP_v9-v1/NANOAODSIM',
         nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v1_DYJetsToLL'),
     bm.JobConfig( dataset='/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL16NanoAODv2-106X_mcRun2_asymptotic_v15-v1/NANOAODSIM',
@@ -89,7 +83,6 @@ samplesDict['2016_MC'] = [
         nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v2_GJets600ToInf')
     ]
 
-"""
 
 # -----------------------------
 # submit to batch
