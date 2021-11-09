@@ -2,9 +2,9 @@
 
 HOMEDIR=/afs/cern.ch/user/p/pellicci/work/ZThreeGamma/Production/CMSSW_10_6_17_patch1/src/StandardModel/ZThreeGamma/generation
 CMSSW_TO_USE=CMSSW_10_6_17_patch1
-INPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2016/signal/postAPV/SIM
-OUTPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2016/signal/postAPV/DIGI
-PYTHONAME=ZToThreeGamma_DIGI_2016_postAPV_cfg.py
+INPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2016/signal/postAPV/RECO
+OUTPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2016/signal/postAPV/MINI
+PYTHONAME=ZToThreeGamma_MINI_2016_postAPV_cfg.py
 
 NEVENTS=$1
 FILENAME=$2
