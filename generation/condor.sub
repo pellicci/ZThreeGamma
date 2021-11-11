@@ -1,5 +1,5 @@
 executable              = testScript_queue.sh
-arguments               = 250 ZThreeGamma $(ProcId)
+arguments               = 500 ZThreeGamma $(ProcId)
 output                  = outputs/run_ZThreeGamma_$(ProcId).out 
 error                   = logs/run_ZThreeGamma_$(ProcId).err 
 log                     = logs/run_ZThreeGamma_.log 
