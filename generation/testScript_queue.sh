@@ -1,10 +1,10 @@
 #!/bin/bash
 
-HOMEDIR=/afs/cern.ch/user/p/pellicci/work/ZThreeGamma/Production/CMSSW_10_6_17_patch1/src/StandardModel/ZThreeGamma/generation
-CMSSW_TO_USE=CMSSW_10_6_17_patch1
-INPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2016/GGG/preAPV/RECO
-OUTPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2016/GGG/preAPV/MINI
-PYTHONAME=ZToThreeGamma_MINI_2016_cfg.py
+HOMEDIR=/afs/cern.ch/user/p/pellicci/work/ZThreeGamma/Production/CMSSW_10_6_19_patch3/src/StandardModel/ZThreeGamma/generation
+CMSSW_TO_USE=CMSSW_10_6_19_patch3
+INPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2016/GGG/postAPV/GEN
+OUTPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2016/GGG/postAPV/GEN
+PYTHONAME=GGG_LHEGEN_2016_postAPV_cfg.py
 
 NEVENTS=$1
 FILENAME=$2
@@ -52,6 +52,6 @@ EOF
 
 jobNumber=$(($3+$OFFSET));
 
-xrdcp $INPUTDIR/${FILENAME}_${jobNumber}.root .
+#xrdcp $INPUTDIR/${FILENAME}_${jobNumber}.root .
 cmsRun $PYTHONAME $NEVENTS ${FILENAME}_${jobNumber}.root
 xrdcp process.root $OUTPUTDIR/${FILENAME}_${jobNumber}.root
