@@ -52,6 +52,6 @@ EOF
 
 jobNumber=$(($3+$OFFSET));
 
-xrdcp $INPUTDIR/${FILENAME}_${jobNumber}.root .
+#xrdcp $INPUTDIR/${FILENAME}_${jobNumber}.root .
 cmsRun $PYTHONAME $NEVENTS ${FILENAME}_${jobNumber}.root
 xrdcp process.root $OUTPUTDIR/${FILENAME}_${jobNumber}.root
