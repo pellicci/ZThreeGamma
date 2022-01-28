@@ -1,10 +1,10 @@
 #!/bin/bash
 
-HOMEDIR=/afs/cern.ch/user/p/pellicci/work/ZThreeGamma/Production/CMSSW_10_6_17_patch1/src/StandardModel/ZThreeGamma/generation
-CMSSW_TO_USE=CMSSW_10_6_17_patch1
-INPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2017/signal/SIM
-OUTPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2017/signal/DIGI
-PYTHONAME=ZToThreeGamma_DIGI_2017_cfg.py
+HOMEDIR=/afs/cern.ch/user/p/pellicci/work/ZThreeGamma/Production/CMSSW_9_4_14_UL_patch1/src/StandardModel/ZThreeGamma/generation
+CMSSW_TO_USE=CMSSW_9_4_14_UL_patch1
+INPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2017/signal/DIGI
+OUTPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2017/signal/HLT
+PYTHONAME=ZToThreeGamma_HLT_2017_cfg.py
 
 NEVENTS=$1
 FILENAME=$2
