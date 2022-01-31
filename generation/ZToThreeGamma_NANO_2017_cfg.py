@@ -2,15 +2,15 @@
 # using: 
 # Revision: 1.19 
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
-# with command line options: --python_filename ZToThreeGamma_NANO_2016_2_cfg.py --eventcontent NANOAODSIM --datatier NANOAODSIM --fileout file:process.root --conditions 106X_mcRun2_asymptotic_preVFP_v9 --step NANO --filein file:ZThreeGamma_0.root --era Run2_2016,run2_nanoAOD_106Xv1 --no_exec --mc -n 10
+# with command line options: --python_filename ZToThreeGamma_NANO_2017_cfg.py --eventcontent NANOEDMAODSIM --datatier NANOAODSIM --fileout file:process.root --conditions 106X_mc2017_realistic_v8 --step NANO --filein file:processIN.root --era Run2_2017,run2_nanoAOD_106Xv1 --no_exec --mc -n 10
 import FWCore.ParameterSet.Config as cms
 
 import sys
 
-from Configuration.Eras.Era_Run2_2016_cff import Run2_2016
+from Configuration.Eras.Era_Run2_2017_cff import Run2_2017
 from Configuration.Eras.Modifier_run2_nanoAOD_106Xv1_cff import run2_nanoAOD_106Xv1
 
-process = cms.Process('NANO',Run2_2016,run2_nanoAOD_106Xv1)
+process = cms.Process('NANO',Run2_2017,run2_nanoAOD_106Xv1)
 
 # import of standard configurations
 process.load('Configuration.StandardSequences.Services_cff')
@@ -61,7 +61,7 @@ process.NANOAODSIMoutput = cms.OutputModule("NanoAODOutputModule",
 
 # Other statements
 from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag = GlobalTag(process.GlobalTag, '106X_mcRun2_asymptotic_preVFP_v9', '')
+process.GlobalTag = GlobalTag(process.GlobalTag, '106X_mc2017_realistic_v8', '')
 
 # Path and EndPath definitions
 process.nanoAOD_step = cms.Path(process.nanoSequenceMC)
