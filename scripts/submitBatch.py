@@ -10,7 +10,7 @@ import os, sys
 executable = 'execBatch.sh'
 analyzer   = 'run_ntuplizer.py'
 stage_dir  = 'batch'
-output_dir = '/eos/user/p/pellicci/ZThreeGamma_root/2016/skimprocess/'
+output_dir = '/eos/user/p/pellicci/ZThreeGamma_root/skimprocess/'
 
 # -----------------------------
 # Set job configurations.  
@@ -48,6 +48,20 @@ samplesDict['2016'] = [
         nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=True, suffix='2016H_DoubleEG')
     ]
 
+samplesDict['2017'] = [ 
+    bm.JobConfig( dataset='/DoubleEG/Run2017B-UL2017_MiniAODv1_NanoAODv2-v1/NANOAOD',
+        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=True, suffix='2017B_DoubleEG'),
+    bm.JobConfig( dataset='/DoubleEG/Run2017C-UL2017_MiniAODv1_NanoAODv2-v1/NANOAOD',
+        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=True, suffix='2017C_DoubleEG'),
+    bm.JobConfig( dataset='/DoubleEG/Run2017D-UL2017_MiniAODv1_NanoAODv2-v1/NANOAOD',
+        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=True, suffix='2017D_DoubleEG'),
+    bm.JobConfig( dataset='/DoubleEG/Run2017E-UL2017_MiniAODv1_NanoAODv2-v1/NANOAOD',
+        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=True, suffix='2017E_DoubleEG'),
+    bm.JobConfig( dataset='/DoubleEG/Run2017F-UL2017_MiniAODv1_NanoAODv2-v1/NANOAOD',
+        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=True, suffix='2017F_DoubleEG')
+    ]
+
+
 samplesDict['2016_MC'] = [ 
     bm.JobConfig( dataset='/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL16NanoAODAPVv2-106X_mcRun2_asymptotic_preVFP_v9-v1/NANOAODSIM',
         nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v1_DYJetsToLL'),
@@ -83,13 +97,30 @@ samplesDict['2016_MC'] = [
         nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v2_GJets600ToInf')
     ]
 
+samplesDict['2017_MC'] = [ 
+    bm.JobConfig( dataset='/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL17NanoAODv2-106X_mc2017_realistic_v8-v1/NANOAODSIM',
+        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=False, suffix='2017_DYJetsToLL'),
+    bm.JobConfig( dataset='/ZGToLLG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL17NanoAODv2-106X_mc2017_realistic_v8-v1/NANOAODSIM',
+        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=False, suffix='2017_ZGToLLG'),
+    bm.JobConfig( dataset='/DiPhotonJets_MGG-80toInf_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL17NanoAODv2-106X_mc2017_realistic_v8-v1/NANOAODSIM',
+        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=False, suffix='2017_DiPhotonJets'),
+    bm.JobConfig( dataset='/GJets_DR-0p4_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL17NanoAODv2-106X_mc2017_realistic_v8-v1/NANOAODSIM',
+        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=False, suffix='2017_GJets100To200'),
+    bm.JobConfig( dataset='/GJets_DR-0p4_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL17NanoAODv2-106X_mc2017_realistic_v8-v1/NANOAODSIM',
+        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=False, suffix='2017_GJets200To400'),
+    bm.JobConfig( dataset='/GJets_DR-0p4_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL17NanoAODv2-106X_mc2017_realistic_v8-v1/NANOAODSIM',
+        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=False, suffix='2017_GJets400To600'),
+    bm.JobConfig( dataset='/GJets_DR-0p4_HT-600ToInf_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL17NanoAODv2-106X_mc2017_realistic_v8-v1/NANOAODSIM',
+        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=False, suffix='2017_GJets600ToInf')
+    ]
 
 # -----------------------------
 # submit to batch
 # -----------------------------
 samplesToSubmit = samplesDict.keys()
 samplesToSubmit.sort()
-doYears = ["2016", "2017", "2018"]
+#doYears = ["2016", "2017", "2018"]
+doYears = ["2017"]
 configs = []
 
 for s in samplesToSubmit:

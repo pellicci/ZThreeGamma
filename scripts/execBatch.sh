@@ -72,7 +72,7 @@ do
         exit $XRDEXIT
     fi
 
-    python test/${ANALYZER} ${ISDATA} temp.root #runningEra=${YEAR}
+    python test/${ANALYZER} ${ISDATA} runningEra=${YEAR} temp.root
     mv tree.root outDir/tree_${COUNTER}.root
     rm *.root
     COUNTER=$((COUNTER+1))

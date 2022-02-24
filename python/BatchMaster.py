@@ -162,7 +162,7 @@ class BatchMaster():
         else:
             cmssw_version = os.getenv('CMSSW_BASE').split('/')[-1]
             if doSubmit:
-                os.system('tar czf {0}/source.tar.gz --exclude=\'ZThree*.root\' -C $CMSSW_BASE/.. {1}'.format(self._stage_dir, cmssw_version))
+                os.system('tar czf {0}/source.tar.gz --exclude-from=exclusion_list.txt -C $CMSSW_BASE/.. {1}'.format(self._stage_dir, cmssw_version))
 
         subprocess.call('cp {0} {1}'.format(self._executable, self._stage_dir), shell=True)
         os.chdir(self._stage_dir)
