@@ -2,9 +2,9 @@
 
 HOMEDIR=/afs/cern.ch/user/p/pellicci/work/ZThreeGamma/Production/CMSSW_10_6_19_patch3/src/StandardModel/ZThreeGamma/generation
 CMSSW_TO_USE=CMSSW_10_6_19_patch3
-INPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2017/signal/LHEGEN
-OUTPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2017/signal/LHEGEN
-PYTHONAME=ZToThreeGamma_LHEGEN_2017_cfg.py
+INPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2018/signal/LHEGEN
+OUTPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2018/signal/LHEGEN
+PYTHONAME=ZToThreeGamma_LHEGEN_2018_cfg.py
 
 NEVENTS=$1
 FILENAME=$2
