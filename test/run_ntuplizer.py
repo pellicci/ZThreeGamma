@@ -4,8 +4,8 @@ import sys
 import ROOT
 
 inputfile = []
-if len(sys.argv) > 2 :
-    inputfile = [sys.argv[2]]
+if len(sys.argv) > 3 :
+    inputfile = [sys.argv[3]]
 else :
     inputfile = ['/afs/cern.ch/user/p/pellicci/cernbox/ZThreeGamma_root/2016/NANO/ZThreeGamma_NANO.root']
 
@@ -18,6 +18,15 @@ if isData_string == "data" :
     print "Running on a data sample"
 else :
     print "Running on a MC sample"
+
+tmp_runningEra = sys.argv[2]
+if "2016" in tmp_runningEra :
+    myrunningEra = 0
+elif "2017" in tmp_runningEra :
+    myrunningEra = 2
+elif "2018" in tmp_runningEra :
+    myrunningEra = 3
+print "Running era is ", myrunningEra
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
 
@@ -85,7 +94,7 @@ class exampleProducer(Module):
 
         ph_3mass = 0.
 
-        if (len(photons) > 2) :
+        if len(photons) > 2 :
             ph1_4mom = photons[0].p4()
             ph2_4mom = photons[1].p4()
             ph3_4mom = photons[2].p4()
@@ -106,14 +115,19 @@ class exampleProducer(Module):
             if (ph1_4mom.Pt() > 20. and ph2_4mom.Pt() > 20. and ph3_4mom.Pt() > 10. and ph_3mass > 55.) :
                 self.N_run3new += 1
 
-        if HLT.Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55 or HLT.Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55:
-            self.N_Diphoton30_18 += 1
+        if self.runningEra < 2 :
+            if HLT.Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55 or HLT.Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55:
+                self.N_Diphoton30_18 += 1
 
         ########################################
 
         ####here starts the actual selection
         if self.runningEra < 2 and not (HLT.Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55 or HLT.Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55) :
             return False
+
+        if self.runningEra == 2 and not HLT.Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55 :
+            return False
+
         self.histcount.Fill(1)
 
         N_muonscount = 0
@@ -173,10 +187,13 @@ class exampleProducer(Module):
         return True
 
 if isData :
-    p=PostProcessor(".",inputfile,"",modules=[exampleProducer(0)],provenance=True,fwkJobReport=True,outputbranchsel="keep_and_drop.txt")
+    p=PostProcessor(".",inputfile,"",modules=[exampleProducer(myrunningEra)],provenance=True,fwkJobReport=True,outputbranchsel="keep_and_drop.txt")
     p.run()
 else :
-    p=PostProcessor(".",inputfile,"",modules=[exampleProducer(0),puAutoWeight_2016()],provenance=True,fwkJobReport=True,outputbranchsel="keep_and_drop.txt")
+    if myrunningEra < 2 :
+        p=PostProcessor(".",inputfile,"",modules=[exampleProducer(myrunningEra),puAutoWeight_2016()],provenance=True,fwkJobReport=True,outputbranchsel="keep_and_drop.txt")
+    elif myrunningEra == 2 :
+        p=PostProcessor(".",inputfile,"",modules=[exampleProducer(myrunningEra),puAutoWeight_2017()],provenance=True,fwkJobReport=True,outputbranchsel="keep_and_drop.txt")
     p.run()
 
 

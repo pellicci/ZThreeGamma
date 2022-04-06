@@ -6,14 +6,20 @@ import sys
 #Supress the opening of many Canvas's
 ROOT.gROOT.SetBatch(True)   
 
-signal_magnify = 10.
+signal_magnify = 1.
 CR_magnify = 1. #2079./1179.
 
-plotOnlyData = False
+plotOnlyData = True
 
 list_inputfiles = []
 #inputnames = ["Signal","data","GJets","ZGToLLG01J","DYJetsToLL","DiPhotonJets",CR1","CR3"]
-inputnames = ["Signal","data","ZGToLLG01J","DYJetsToLL","CR3","GJets","CR2"]
+#inputnames = ["Signal","data","ZGToLLG01J","DYJetsToLL","CR3","GJets","CR2"]
+#inputnames = ["Signal","data","CR3","CR1","GGG"]
+inputnames = ["Signal","data"]
+
+useSidebands = False
+if "SB" in inputnames :
+	useSidebands = True
 
 for inputname in inputnames:
 	list_inputfiles.append("histos/ZThreeGamma_" + inputname + ".root")
@@ -35,8 +41,9 @@ for key in keylist :
 		continue
 	list_histos.append( key.ReadObj().GetName() )
 
-for hname in list_histos:
-	hstack[hname] = ROOT.THStack("hstack_" + hname,"")
+if not useSidebands :
+	for hname in list_histos :
+		hstack[hname] = ROOT.THStack("hstack_" + hname,"")
 
 # Color mask
 colors_mask = dict()
@@ -47,6 +54,8 @@ colors_mask["CR3"]          = ROOT.kOrange+1
 colors_mask["GJets"]        = ROOT.kGreen-7
 colors_mask["CR1"]          = ROOT.kBlue-7
 colors_mask["CR2"]          = ROOT.kBlue-5
+colors_mask["GGG"]          = ROOT.kYellow-8
+colors_mask["SB"]           = ROOT.kBlue-7
 
 #Eyecandy
 leg1 = ROOT.TLegend(0.6868687,0.6120093,0.9511784,0.9491917) #right positioning
@@ -77,22 +86,27 @@ for filename in list_inputfiles:
 		if not "h_N" in histo_name :
 			histo_container[-1].Rebin(2)
 
-		if "Signal" in sample_name:
+		#if histo_name == "h_threegammass" :
+		#	histo_container[-1].Rebin(2)
+
+		if "Signal" in sample_name :
 			histo_container[-1].SetLineStyle(2)   #dashed
 			histo_container[-1].SetLineColor(2)   #red
 			histo_container[-1].SetLineWidth(4)   #kind of thick
 			hsignal[histo_name] = histo_container[-1]
-		elif "data" in sample_name:
+		elif "data" in sample_name :
 			histo_container[-1].SetMarkerStyle(20)   #point
 			hdata[histo_name] = histo_container[-1]
-		else:
+		else :
 			histo_container[-1].SetFillColor(colors_mask[sample_name])
 			histo_container[-1].SetLineColor(colors_mask[sample_name])
-			hstack[histo_name].Add(histo_container[-1])
+			if not useSidebands :
+				hstack[histo_name].Add(histo_container[-1])
+			else :
+				hstack[histo_name] = histo_container[-1]
 
 		if plotOnlyData :
 			hstack[histo_name].Add(histo_container[-1])
-
 
 		if "threegammas" in histo_name : #Add the legend only once (gammaet is just a random variable)
 
@@ -101,7 +115,7 @@ for filename in list_inputfiles:
 			elif sample_name == "data":
 				leg1.AddEntry(histo_container[-1],sample_name,"ep")
 			elif sample_name == "Signal":
-				leg1.AddEntry(histo_container[-1],"Signal (SMx 10^{5})","f")
+				leg1.AddEntry(histo_container[-1],"Signal (SMx 10^{4})","f")
 
 	fileIn.Close()
 
@@ -131,7 +145,18 @@ for histo_name in list_histos:
 	hdata[histo_name].SetTitle("")
 	hsignal[histo_name].SetTitle("")
 
+	#Manage exclusions
+	if "twotrkmass" in histo_name :
+		continue
+
+	if signal_magnify != 1:
+		hsignal[histo_name].Scale(signal_magnify)      
+
 	if not plotOnlyData :
+
+		if useSidebands :
+			hstack[histo_name].Scale(hdata[histo_name].Integral()/hstack[histo_name].Integral())
+
 		hstack[histo_name].Draw("histo")
 		hstack[histo_name].GetYaxis().SetTitleSize(0.07)
 		hstack[histo_name].GetYaxis().SetTitleOffset(0.7)
@@ -141,28 +166,32 @@ for histo_name in list_histos:
 		if hdata[histo_name].GetMaximum() > hstack[histo_name].GetMaximum() :
 			hstack[histo_name].SetMaximum(hdata[histo_name].GetMaximum())
 
+		if hsignal[histo_name].GetMaximum() > hstack[histo_name].GetMaximum() :
+			hstack[histo_name].SetMaximum(hsignal[histo_name].GetMaximum())
+
 		if histo_name == "h_m12" :
-			hstack[histo_name].SetMaximum(1000.)
+			#hstack[histo_name].SetMaximum(1000.)
+			#hstack[histo_name].Rebin(2)
 			hstack[histo_name].GetXaxis().SetTitle("m_{12} (GeV)")
 
 		if histo_name == "h_m13" :
-			hstack[histo_name].SetMaximum(600.)
+			#hstack[histo_name].SetMaximum(600.)
 			hstack[histo_name].GetXaxis().SetTitle("m_{13} (GeV)")
 
 		if histo_name == "h_m23" :
-			hstack[histo_name].SetMaximum(600.)
+			#hstack[histo_name].SetMaximum(600.)
 			hstack[histo_name].GetXaxis().SetTitle("m_{23} (GeV)")
 
 		if histo_name == "h_phot1_ET" :
-			hstack[histo_name].SetMaximum(1200.)
+			#hstack[histo_name].SetMaximum(1200.)
 			hstack[histo_name].GetXaxis().SetTitle("E_{T,1} (GeV)")
 
 		if histo_name == "h_phot2_ET" :
-			hstack[histo_name].SetMaximum(1500.)
+			#hstack[histo_name].SetMaximum(1500.)
 			hstack[histo_name].GetXaxis().SetTitle("E_{T,2} (GeV)")
 
 		if histo_name == "h_phot3_ET" :
-			hstack[histo_name].SetMaximum(3000.)
+			#hstack[histo_name].SetMaximum(3000.)
 			hstack[histo_name].GetXaxis().SetTitle("E_{T,3} (GeV)")
 
 		if histo_name == "h_eta1" :
@@ -172,11 +201,14 @@ for histo_name in list_histos:
 			hstack[histo_name].GetXaxis().SetTitle("#eta_{2}")
 
 		if histo_name == "h_eta3" :
-			hstack[histo_name].SetMaximum(700.)
+			#hstack[histo_name].SetMaximum(700.)
 			hstack[histo_name].GetXaxis().SetTitle("#eta_{3}")
 
 		if histo_name == "h_threegammass" :
-			hstack[histo_name].SetMaximum(1000.)
+			hstack[histo_name].SetMaximum(300.)
+			#hstack[histo_name].Rebin(2)
+			#hdata[histo_name].Rebin(2)
+			#hsignal[histo_name].Rebin(2)
 			hstack[histo_name].GetXaxis().SetTitle("m_{#gamma#gamma#gamma} (GeV)")
 
 		if histo_name == "h_r9_1" :
@@ -209,13 +241,23 @@ for histo_name in list_histos:
 
 		hstack[histo_name].Draw("SAME,histo")
 
-	if signal_magnify != 1:
-		hsignal[histo_name].Scale(signal_magnify)      
 
-	hdata[histo_name].Draw("SAME,E1,X0")
-	hsignal[histo_name].Draw("SAME,hist")
+	if plotOnlyData :
+		hdata[histo_name].GetXaxis().SetTitle("m_{#gamma#gamma#gamma} (GeV)")
+		hdata[histo_name].SetMaximum(220.)
+		hdata[histo_name].Rebin(2)
+		hsignal[histo_name].Rebin(2)
+		hdata[histo_name].Draw("E1,X0")
+		hsignal[histo_name].Draw("SAME,hist")
+	else :
+		hdata[histo_name].Draw("SAME,E1,X0")
+		hsignal[histo_name].Draw("SAME,hist")
 
-	hMCErr = copy.deepcopy(hstack[histo_name].GetStack().Last())
+	if not useSidebands :
+		hMCErr = copy.deepcopy(hstack[histo_name].GetStack().Last())
+	else :
+		hMCErr = copy.deepcopy(hstack[histo_name])
+
 	hMCErr_size = hMCErr.GetSize() - 2
 	hMCErr.SetFillStyle(3005)
 	hMCErr.SetMarkerStyle(0)
