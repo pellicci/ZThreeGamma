@@ -8,40 +8,38 @@ rm histos/*
 
 ###2016 preAPV
 
-./histo_maker.py 0 1 0 0 finalSkim/ZThreeGamma_Signal_0.root histos/ZThreeGamma_Signal_CR1_0.root
-./histo_maker.py 0 2 0 0 finalSkim/ZThreeGamma_Signal_0.root histos/ZThreeGamma_Signal_CR2_0.root
-./histo_maker.py 0 3 0 0 finalSkim/ZThreeGamma_Signal_0.root histos/ZThreeGamma_Signal_CR3_0.root
+#./histo_maker.py 0 1 0 0 finalSkim/ZThreeGamma_Signal_0.root histos/ZThreeGamma_Signal_CR1_0.root
+#./histo_maker.py 0 2 0 0 finalSkim/ZThreeGamma_Signal_0.root histos/ZThreeGamma_Signal_CR2_0.root
+#./histo_maker.py 0 3 0 0 finalSkim/ZThreeGamma_Signal_0.root histos/ZThreeGamma_Signal_CR3_0.root
 
 ###2016 
 
-./histo_maker.py 1 1 0 0 finalSkim/ZThreeGamma_Signal_1.root histos/ZThreeGamma_Signal_CR1_1.root
-./histo_maker.py 1 2 0 0 finalSkim/ZThreeGamma_Signal_1.root histos/ZThreeGamma_Signal_CR2_1.root
-./histo_maker.py 1 3 0 0 finalSkim/ZThreeGamma_Signal_1.root histos/ZThreeGamma_Signal_CR3_1.root
+#./histo_maker.py 1 1 0 0 finalSkim/ZThreeGamma_Signal_1.root histos/ZThreeGamma_Signal_CR1_1.root
+#./histo_maker.py 1 2 0 0 finalSkim/ZThreeGamma_Signal_1.root histos/ZThreeGamma_Signal_CR2_1.root
+#./histo_maker.py 1 3 0 0 finalSkim/ZThreeGamma_Signal_1.root histos/ZThreeGamma_Signal_CR3_1.root
 
 ###2017
 
-./histo_maker.py 2 1 0 0 finalSkim/ZThreeGamma_Signal_2.root histos/ZThreeGamma_Signal_CR1_2.root
-./histo_maker.py 2 2 0 0 finalSkim/ZThreeGamma_Signal_2.root histos/ZThreeGamma_Signal_CR2_2.root
-./histo_maker.py 2 3 0 0 finalSkim/ZThreeGamma_Signal_2.root histos/ZThreeGamma_Signal_CR3_2.root
-
+#./histo_maker.py 2 1 0 0 finalSkim/ZThreeGamma_Signal_2.root histos/ZThreeGamma_Signal_CR1_2.root
+#./histo_maker.py 2 2 0 0 finalSkim/ZThreeGamma_Signal_2.root histos/ZThreeGamma_Signal_CR2_2.root
+#./histo_maker.py 2 3 0 0 finalSkim/ZThreeGamma_Signal_2.root histos/ZThreeGamma_Signal_CR3_2.root
 
 #data
 
-./histo_maker.py 0 1 0 0 finalSkim/ZThreeGamma_DoubleEG_0.root histos/ZThreeGamma_CR1_0.root
-./histo_maker.py 0 2 0 0 finalSkim/ZThreeGamma_DoubleEG_0.root histos/ZThreeGamma_CR2_0.root
-./histo_maker.py 0 3 0 0 finalSkim/ZThreeGamma_DoubleEG_0.root histos/ZThreeGamma_CR3_0.root
+#./histo_maker.py 0 1 0 0 finalSkim/ZThreeGamma_DoubleEG_0.root histos/ZThreeGamma_CR1_0.root
+#./histo_maker.py 0 2 0 0 finalSkim/ZThreeGamma_DoubleEG_0.root histos/ZThreeGamma_CR2_0.root
+#./histo_maker.py 0 3 0 0 finalSkim/ZThreeGamma_DoubleEG_0.root histos/ZThreeGamma_CR3_0.root
 
-./histo_maker.py 2 1 0 0 finalSkim/ZThreeGamma_DoubleEG_2.root histos/ZThreeGamma_CR1_2.root
-./histo_maker.py 2 2 0 0 finalSkim/ZThreeGamma_DoubleEG_2.root histos/ZThreeGamma_CR2_2.root
-./histo_maker.py 2 3 0 0 finalSkim/ZThreeGamma_DoubleEG_2.root histos/ZThreeGamma_CR3_2.root
-
+#./histo_maker.py 2 1 0 0 finalSkim/ZThreeGamma_DoubleEG_2.root histos/ZThreeGamma_CR1_2.root
+#./histo_maker.py 2 2 0 0 finalSkim/ZThreeGamma_DoubleEG_2.root histos/ZThreeGamma_CR2_2.root
+#./histo_maker.py 2 3 0 0 finalSkim/ZThreeGamma_DoubleEG_2.root histos/ZThreeGamma_CR3_2.root
 
 
 #######
 # Now calculate the CR correction
 #######
-python calculate_CR_transfer.py 0
-python calculate_CR_transfer.py 2
+#python calculate_CR_transfer.py 0
+#python calculate_CR_transfer.py 2
 
 ######
 # Now run in SR
@@ -130,45 +128,45 @@ rm histos/ZThreeGamma_SB_?.root
 
 # 2016 preAPV
 
-./histo_maker.py 0 1 1 0 finalSkim/ZThreeGamma_Signal_0.root histos/ZThreeGamma_Signal_CR1_0.root
-./histo_maker.py 0 2 1 0 finalSkim/ZThreeGamma_Signal_0.root histos/ZThreeGamma_Signal_CR2_0.root
-./histo_maker.py 0 3 1 0 finalSkim/ZThreeGamma_Signal_0.root histos/ZThreeGamma_Signal_CR3_0.root
+#./histo_maker.py 0 1 1 0 finalSkim/ZThreeGamma_Signal_0.root histos/ZThreeGamma_Signal_CR1_0.root
+#./histo_maker.py 0 2 1 0 finalSkim/ZThreeGamma_Signal_0.root histos/ZThreeGamma_Signal_CR2_0.root
+#./histo_maker.py 0 3 1 0 finalSkim/ZThreeGamma_Signal_0.root histos/ZThreeGamma_Signal_CR3_0.root
 
 # 2016
 
-./histo_maker.py 1 1 1 0 finalSkim/ZThreeGamma_Signal_1.root histos/ZThreeGamma_Signal_CR1_1.root
-./histo_maker.py 1 2 1 0 finalSkim/ZThreeGamma_Signal_1.root histos/ZThreeGamma_Signal_CR2_1.root
-./histo_maker.py 1 3 1 0 finalSkim/ZThreeGamma_Signal_1.root histos/ZThreeGamma_Signal_CR3_1.root
+#./histo_maker.py 1 1 1 0 finalSkim/ZThreeGamma_Signal_1.root histos/ZThreeGamma_Signal_CR1_1.root
+#./histo_maker.py 1 2 1 0 finalSkim/ZThreeGamma_Signal_1.root histos/ZThreeGamma_Signal_CR2_1.root
+#./histo_maker.py 1 3 1 0 finalSkim/ZThreeGamma_Signal_1.root histos/ZThreeGamma_Signal_CR3_1.root
 
-./histo_maker.py 0 1 1 0 finalSkim/ZThreeGamma_DoubleEG_0.root histos/ZThreeGamma_CR1_0.root
-./histo_maker.py 0 2 1 0 finalSkim/ZThreeGamma_DoubleEG_0.root histos/ZThreeGamma_CR2_0.root
-./histo_maker.py 0 3 1 0 finalSkim/ZThreeGamma_DoubleEG_0.root histos/ZThreeGamma_CR3_0.root
+#./histo_maker.py 0 1 1 0 finalSkim/ZThreeGamma_DoubleEG_0.root histos/ZThreeGamma_CR1_0.root
+#./histo_maker.py 0 2 1 0 finalSkim/ZThreeGamma_DoubleEG_0.root histos/ZThreeGamma_CR2_0.root
+#./histo_maker.py 0 3 1 0 finalSkim/ZThreeGamma_DoubleEG_0.root histos/ZThreeGamma_CR3_0.root
 
 # 2017
 
-./histo_maker.py 2 1 1 0 finalSkim/ZThreeGamma_Signal_2.root histos/ZThreeGamma_Signal_CR1_2.root
-./histo_maker.py 2 2 1 0 finalSkim/ZThreeGamma_Signal_2.root histos/ZThreeGamma_Signal_CR2_2.root
-./histo_maker.py 2 3 1 0 finalSkim/ZThreeGamma_Signal_2.root histos/ZThreeGamma_Signal_CR3_2.root
+#./histo_maker.py 2 1 1 0 finalSkim/ZThreeGamma_Signal_2.root histos/ZThreeGamma_Signal_CR1_2.root
+#./histo_maker.py 2 2 1 0 finalSkim/ZThreeGamma_Signal_2.root histos/ZThreeGamma_Signal_CR2_2.root
+#./histo_maker.py 2 3 1 0 finalSkim/ZThreeGamma_Signal_2.root histos/ZThreeGamma_Signal_CR3_2.root
 
-./histo_maker.py 2 1 1 0 finalSkim/ZThreeGamma_DoubleEG_2.root histos/ZThreeGamma_CR1_2.root
-./histo_maker.py 2 2 1 0 finalSkim/ZThreeGamma_DoubleEG_2.root histos/ZThreeGamma_CR2_2.root
-./histo_maker.py 2 3 1 0 finalSkim/ZThreeGamma_DoubleEG_2.root histos/ZThreeGamma_CR3_2.root
+#./histo_maker.py 2 1 1 0 finalSkim/ZThreeGamma_DoubleEG_2.root histos/ZThreeGamma_CR1_2.root
+#./histo_maker.py 2 2 1 0 finalSkim/ZThreeGamma_DoubleEG_2.root histos/ZThreeGamma_CR2_2.root
+#./histo_maker.py 2 3 1 0 finalSkim/ZThreeGamma_DoubleEG_2.root histos/ZThreeGamma_CR3_2.root
 
 
-hadd -f histos/ZThreeGamma_Signal_CR1.root histos/ZThreeGamma_Signal_CR1_?.root
-rm histos/ZThreeGamma_Signal_CR1_?.root
+#hadd -f histos/ZThreeGamma_Signal_CR1.root histos/ZThreeGamma_Signal_CR1_?.root
+#rm histos/ZThreeGamma_Signal_CR1_?.root
 
-hadd -f histos/ZThreeGamma_Signal_CR2.root histos/ZThreeGamma_Signal_CR2_?.root
-rm histos/ZThreeGamma_Signal_CR2_?.root
+#hadd -f histos/ZThreeGamma_Signal_CR2.root histos/ZThreeGamma_Signal_CR2_?.root
+#rm histos/ZThreeGamma_Signal_CR2_?.root
 
-hadd -f histos/ZThreeGamma_Signal_CR3.root histos/ZThreeGamma_Signal_CR3_?.root
-rm histos/ZThreeGamma_Signal_CR3_?.root
+#hadd -f histos/ZThreeGamma_Signal_CR3.root histos/ZThreeGamma_Signal_CR3_?.root
+#rm histos/ZThreeGamma_Signal_CR3_?.root
 
-hadd -f histos/ZThreeGamma_CR1.root histos/ZThreeGamma_CR1_?.root
-rm histos/ZThreeGamma_CR1_?.root
+#hadd -f histos/ZThreeGamma_CR1.root histos/ZThreeGamma_CR1_?.root
+#rm histos/ZThreeGamma_CR1_?.root
 
-hadd -f histos/ZThreeGamma_CR2.root histos/ZThreeGamma_CR2_?.root
-rm histos/ZThreeGamma_CR2_?.root
+#hadd -f histos/ZThreeGamma_CR2.root histos/ZThreeGamma_CR2_?.root
+#rm histos/ZThreeGamma_CR2_?.root
 
-hadd -f histos/ZThreeGamma_CR3.root histos/ZThreeGamma_CR3_?.root
-rm histos/ZThreeGamma_CR3_?.root
+#hadd -f histos/ZThreeGamma_CR3.root histos/ZThreeGamma_CR3_?.root
+#rm histos/ZThreeGamma_CR3_?.root

@@ -1,8 +1,8 @@
 executable              = testScript_queue.sh
-arguments               = 500 ZThreeGamma $(ProcId)
+arguments               = $(ProcId)
 output                  = outputs/run_ZThreeGamma_$(ProcId).out 
 error                   = logs/run_ZThreeGamma_$(ProcId).err 
-log                     = logs/run_ZThreeGamma_.log 
+log                     = logs/run_ZThreeGamma_$(ProcID).log 
 +JobFlavour             = "workday"
 periodic_remove         = JobStatus == 5  
 WhenToTransferOutput    = ON_EXIT_OR_EVICT 

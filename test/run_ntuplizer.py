@@ -7,7 +7,7 @@ inputfile = []
 if len(sys.argv) > 3 :
     inputfile = [sys.argv[3]]
 else :
-    inputfile = ['/afs/cern.ch/user/p/pellicci/cernbox/ZThreeGamma_root/2016/NANO/ZThreeGamma_NANO.root']
+    inputfile = ['/afs/cern.ch/user/p/pellicci/cernbox/ZThreeGamma_root/2018/signal/NANO/ZThreeGamma_NANO_2018.root']
 
 print inputfile
 
@@ -128,6 +128,9 @@ class exampleProducer(Module):
         if self.runningEra == 2 and not HLT.Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55 :
             return False
 
+        if self.runningEra == 3 and not HLT_Diphoton30_18_R9IdL_AND_HE_AND_IsoCaloId_NoPixelVeto :
+            return False
+
         self.histcount.Fill(1)
 
         N_muonscount = 0
@@ -194,7 +197,8 @@ else :
         p=PostProcessor(".",inputfile,"",modules=[exampleProducer(myrunningEra),puAutoWeight_2016()],provenance=True,fwkJobReport=True,outputbranchsel="keep_and_drop.txt")
     elif myrunningEra == 2 :
         p=PostProcessor(".",inputfile,"",modules=[exampleProducer(myrunningEra),puAutoWeight_2017()],provenance=True,fwkJobReport=True,outputbranchsel="keep_and_drop.txt")
+    elif myrunningEra == 3 :
+        p=PostProcessor(".",inputfile,"",modules=[exampleProducer(myrunningEra),puAutoWeight_2018()],provenance=True,fwkJobReport=True,outputbranchsel="keep_and_drop.txt")
     p.run()
-
 
 print "DONE"

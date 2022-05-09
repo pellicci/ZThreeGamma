@@ -9,13 +9,13 @@ ROOT.gROOT.SetBatch(True)
 signal_magnify = 1.
 CR_magnify = 1. #2079./1179.
 
-plotOnlyData = True
+plotOnlyData = False
 
 list_inputfiles = []
 #inputnames = ["Signal","data","GJets","ZGToLLG01J","DYJetsToLL","DiPhotonJets",CR1","CR3"]
 #inputnames = ["Signal","data","ZGToLLG01J","DYJetsToLL","CR3","GJets","CR2"]
 #inputnames = ["Signal","data","CR3","CR1","GGG"]
-inputnames = ["Signal","data"]
+inputnames = ["Signal","data","SB"]
 
 useSidebands = False
 if "SB" in inputnames :
@@ -206,9 +206,9 @@ for histo_name in list_histos:
 
 		if histo_name == "h_threegammass" :
 			hstack[histo_name].SetMaximum(300.)
-			#hstack[histo_name].Rebin(2)
-			#hdata[histo_name].Rebin(2)
-			#hsignal[histo_name].Rebin(2)
+			hstack[histo_name].Rebin(2)
+			hdata[histo_name].Rebin(2)
+			hsignal[histo_name].Rebin(2)
 			hstack[histo_name].GetXaxis().SetTitle("m_{#gamma#gamma#gamma} (GeV)")
 
 		if histo_name == "h_r9_1" :

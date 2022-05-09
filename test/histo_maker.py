@@ -5,53 +5,16 @@ import argparse
 import math
 from array import array
 
+from Workflow_Handler import Workflow_Handler
 ROOT.gROOT.SetBatch(True)
 
 do_MVA_Stage = True
-cut_MVA = 0.0100125001461
-
-def get_xsec_norm(runningEra, sample_name) :
-	if runningEra == 0 :
-		if "Signal" in sample_name : return float( (6225.2*0.000001/0.0337) *1000./ (199.*250.))
-		if "DiPhotonJets" in sample_name : return float( 126.2 *1000./ (2359151. *(1.-2.*0.2363)))
-		if "DYJetsToLL" in sample_name : return float( 6404.0 *1000./ (91988603. *(1.-2.*0.1643)))
-		if "ZGToLLG" in sample_name : return float( 51.1 *1000./ (27805647.*(1.-2.*0.1923)))
-		if "GJets40To100" in sample_name : return float( 18540. *1000./ 8952278.)
-		if "GJets100To200" in sample_name : return float( 8644. *1000./ 9332192.)
-		if "GJets200To400" in sample_name : return float( 2183. *1000./ 19087322.)
-		if "GJets400To600" in sample_name : return float( 260.2 *1000./ 4242991.)
-		if "GJets600ToInf" in sample_name : return float( 86.58 *1000./ 4661194.)
-		if "GGG" in sample_name : return float( 8.681 *1000./ (200.*500.))
-	elif runningEra == 1 :
-		if "Signal" in sample_name : return float( (6225.2*0.000001/0.0337) *1000./ (200.*250.))
-		if "DiPhotonJets" in sample_name : return float( 126.2 *1000./ (2423396. *(1.-2.*0.2363)))
-		if "DYJetsToLL" in sample_name : return float( 6404.0 *1000./ (95237235.*(1.-2.*0.1643)))
-		if "ZGToLLG" in sample_name : return float( 51.1 *1000./ (31606911.*(1-2.*0.1923)))
-		if "GJets40To100" in sample_name : return float( 18540. *1000./ 9082742.)
-		if "GJets100To200" in sample_name : return float( 8644. *1000./ 9882256.)
-		if "GJets200To400" in sample_name : return float( 2183. *1000./ 19874909.)
-		if "GJets400To600" in sample_name : return float( 260.2 *1000./ 4629781.)
-		if "GJets600ToInf" in sample_name : return float( 86.58 *1000./ 4366096.)
-		if "GGG" in sample_name : return float( 8.681 *1000./ (200.*500.))
-
-	elif runningEra == 2 :
-		if "Signal" in sample_name : return float( (6225.2*0.000001/0.0337) *1000./ (200.*500.))
-		if "DiPhotonJets" in sample_name : return float( 126.2 *1000./ (4515087. *(1.-2.*0.2363)))
-		if "DYJetsToLL" in sample_name : return float( 6404.0 *1000./ (194627557.*(1.-2.*0.1643)))
-		if "ZGToLLG" in sample_name : return float( 51.1 *1000./ (29885702.*(1-2.*0.1923)))
-		if "GJets100To200" in sample_name : return float( 5034. *1000./ 10318691.)
-		if "GJets200To400" in sample_name : return float( 1128. *1000./ 33668046.)
-		if "GJets400To600" in sample_name : return float( 124.8 *1000./ 9870485.)
-		if "GJets600ToInf" in sample_name : return float( 40.72 *1000./ 8330226.)
-		if "GGG" in sample_name : return float( 8.681 *1000./ (200.*500.))
-
-
-	return 1.
+cut_MVA = 0.0891805791371
 
 def select_all_but_one(h_string="NoCut"):
 
 	selection_bools = dict()
-	selection_bools["h_NElectrons"] = N_electrons_clean < 5   
+	selection_bools["h_NElectrons"] = N_electrons_clean < 1
 	selection_bools["h_NPhotons"] = N_photons == 3
 	selection_bools["h_m12"] = invmass_12 < 100. #80.
 	selection_bools["h_m13"] = invmass_13 < 100. #70.
@@ -90,6 +53,8 @@ useSidebands = int(args.Sidebands_option)
 input_filename = args.inputfile_option
 output_filename = args.outputfile_option
 
+myWF = Workflow_Handler(runningEra)
+
 #Normalize to this luminsity, in fb-1
 luminosity_norm = 1.
 if runningEra == 0 :
@@ -98,7 +63,8 @@ if runningEra == 1 :
 	luminosity_norm = 16.81
 if runningEra == 2 :
 	luminosity_norm = 41.48
-
+if runningEra == 3 :
+	luminosity_norm = 59.83
 
 # Get the files and the names of the samples
 sample_name = input_filename.split("_")[1]
@@ -116,24 +82,24 @@ if CRflag > 0 :
 else :
 	print "Processing the signal region"
 
-if SecondPass and not CRflag == 0 :
-	if runningEra < 2 :
-		CRfraction_filename = "histos/CRfraction_0.root"
-	elif runningEra == 2 :
-		CRfraction_filename = "histos/CRfraction_2.root"
+#if SecondPass and not CRflag == 0 :
+#	if runningEra < 2 :
+#		CRfraction_filename = "histos/CRfraction_0.root"
+#	elif runningEra == 2 :
+#		CRfraction_filename = "histos/CRfraction_2.root"
 
-	fileCRfraction = ROOT.TFile(CRfraction_filename)
-	fileCRfraction.cd()
-	histo_CR1_phot2_low12_fraction  = fileCRfraction.Get("CR1_fraction_phot2ET_low12")
-	histo_CR2_phot3_low12_fraction  = fileCRfraction.Get("CR2_fraction_phot3ET_low12")
-	histo_CR1_phot2_high12_fraction = fileCRfraction.Get("CR1_fraction_phot2ET_high12")
-	histo_CR2_phot3_high12_fraction = fileCRfraction.Get("CR2_fraction_phot3ET_high12")
-	histo_CR1_phot2_fraction  = fileCRfraction.Get("CR1_fraction_phot2ET")
-	histo_CR2_phot3_fraction  = fileCRfraction.Get("CR2_fraction_phot3ET")
-	histo_CR2_phot1_fraction  = fileCRfraction.Get("CR2_fraction_phot1ET")
+#	fileCRfraction = ROOT.TFile(CRfraction_filename)
+#	fileCRfraction.cd()
+#	histo_CR1_phot2_low12_fraction  = fileCRfraction.Get("CR1_fraction_phot2ET_low12")
+#	histo_CR2_phot3_low12_fraction  = fileCRfraction.Get("CR2_fraction_phot3ET_low12")
+#	histo_CR1_phot2_high12_fraction = fileCRfraction.Get("CR1_fraction_phot2ET_high12")
+#	histo_CR2_phot3_high12_fraction = fileCRfraction.Get("CR2_fraction_phot3ET_high12")
+#	histo_CR1_phot2_fraction  = fileCRfraction.Get("CR1_fraction_phot2ET")
+#	histo_CR2_phot3_fraction  = fileCRfraction.Get("CR2_fraction_phot3ET")
+#	histo_CR2_phot1_fraction  = fileCRfraction.Get("CR2_fraction_phot1ET")
 
 #get the MC normalization
-Norm_xsec = get_xsec_norm(runningEra, sample_name)
+Norm_xsec = myWF.get_xsec_norm(sample_name)
 
 #prepare the histos
 h_base = dict()
@@ -143,15 +109,15 @@ list_histos = ["h_threegammass","h_phot1_ET","h_phot2_ET","h_phot3_ET","h_NElect
 	"h_met_pt","h_phot4_ET","h_jet_pt","h_r9_1","h_r9_2","h_r9_3","h_hoe_1","h_hoe_2","h_hoe_3","h_phot2_ET_low12","h_phot3_ET_low12","h_phot2_ET_high12","h_phot3_ET_high12",
 	"h_Z_pt","h_reliso_1","h_reliso_2","h_reliso_3","h_sumEt","h_sum_gam_ID"]
 
-h_base[list_histos[0]] = ROOT.TH1F(list_histos[0], "M_{#gamma#gamma#gamma}", 80, 65., 110.)
+h_base[list_histos[0]] = ROOT.TH1F(list_histos[0], "M_{#gamma#gamma#gamma}", 90, 65., 110.)
 h_base[list_histos[1]] = ROOT.TH1F(list_histos[1], "E_{T,#gamma_{1}}", 60, 20., 110.)
 h_base[list_histos[2]] = ROOT.TH1F(list_histos[2], "E_{T,#gamma_{2}}", 60, 10., 110.)
 h_base[list_histos[3]] = ROOT.TH1F(list_histos[3], "E_{T,#gamma_{3}}", 60, 5., 60.)
 h_base[list_histos[4]] = ROOT.TH1F(list_histos[4], "N_{ele}", 10, -0.5, 9.5)
 h_base[list_histos[5]] = ROOT.TH1F(list_histos[5], "#Delta R 1,2-3", 30, -1., 10.)
 h_base[list_histos[6]] = ROOT.TH1F(list_histos[6], "M_{1,2}", 60, 40., 110.)
-h_base[list_histos[7]] = ROOT.TH1F(list_histos[7], "M_{1,3}", 60, 20., 110.)
-h_base[list_histos[8]] = ROOT.TH1F(list_histos[8], "M_{2,3}", 60, 20., 110.)
+h_base[list_histos[7]] = ROOT.TH1F(list_histos[7], "M_{1,3}", 60, 10., 110.)
+h_base[list_histos[8]] = ROOT.TH1F(list_histos[8], "M_{2,3}", 60, 10., 110.)
 h_base[list_histos[9]] = ROOT.TH1F(list_histos[9], "#eta_{#gamma_{1}}", 60, -2.6, 2.6)
 h_base[list_histos[10]] = ROOT.TH1F(list_histos[10], "#eta_{#gamma_{2}}", 60, -2.6, 2.6)
 h_base[list_histos[11]] = ROOT.TH1F(list_histos[11], "#eta_{#gamma_{3}}", 60, -2.6, 2.6)
@@ -289,20 +255,17 @@ for jentry in xrange(nentries):
 		print "Processed ", Nevts_per_sample, " events..."
 
 	#Select based on the control region flag
-	if not mytree.Photon_mvaID_WP80[0] :
-		continue
+	#if not mytree.Photon_mvaID_WP80[0] :
+	#	continue
 
-	if CRflag == 0 and not (mytree.Photon_mvaID_WP80[1] and mytree.Photon_mvaID_WP80[2])  :
-		continue
-
-	if CRflag == 1 and not (mytree.Photon_mvaID_WP80[1] and not mytree.Photon_mvaID_WP80[2])  :
-		continue
-
-	if CRflag == 2 and not (not mytree.Photon_mvaID_WP80[1] and mytree.Photon_mvaID_WP80[2])  :
-		continue
-
-	if CRflag == 3 and (mytree.Photon_mvaID_WP80[1] or mytree.Photon_mvaID_WP80[2])  :
-		continue
+	#if CRflag == 0 and not (mytree.Photon_mvaID_WP80[1] and mytree.Photon_mvaID_WP80[2])  :
+	#	continue
+	#if CRflag == 1 and not (mytree.Photon_mvaID_WP80[1] and not mytree.Photon_mvaID_WP80[2])  :
+	#	continue
+	#if CRflag == 2 and not (not mytree.Photon_mvaID_WP80[1] and mytree.Photon_mvaID_WP80[2])  :
+	#	continue
+	#if CRflag == 3 and (mytree.Photon_mvaID_WP80[1] or mytree.Photon_mvaID_WP80[2])  :
+	#	continue
 
 	if not (mytree.Photon_electronVeto[0] and mytree.Photon_electronVeto[1] and mytree.Photon_electronVeto[2]) :
 		continue
@@ -383,14 +346,14 @@ for jentry in xrange(nentries):
 	if threephot_invmass > 110. or threephot_invmass < 65.:
 		continue
 
-	if SecondPass and CRflag == 3 and invmass_12 > 80. :
-		continue
-	if SecondPass and CRflag == 1 and invmass_12 < 80. :
-		continue
-	if SecondPass and CRflag == 2 and invmass_12 < 80. :
-		continue
+	#if SecondPass and CRflag == 3 and invmass_12 > 80. :
+	#	continue
+	#if SecondPass and CRflag == 1 and invmass_12 < 80. :
+	#	continue
+	#if SecondPass and CRflag == 2 and invmass_12 < 80. :
+	#	continue
 
-	if useSidebands and isData and (threephot_invmass > 85. and threephot_invmass < 95.) :
+	if useSidebands and isData and (threephot_invmass > 86. and threephot_invmass < 94.) :
 		continue
 
 	twotrk_invmass = -1.
@@ -423,36 +386,42 @@ for jentry in xrange(nentries):
 		MC_Weight = mytree.genWeight
 		PU_Weight = mytree.puWeight # Add Pile Up weight
 
-		Event_Weight = norm_factor*MC_Weight*PU_Weight/math.fabs(MC_Weight) # Just take the sign of the gen weight
+		phot1_weights = myWF.get_photon_scale(phot1_pt,phot1_eta)
+		phot2_weights = myWF.get_photon_scale(phot2_pt,phot2_eta)
+		phot3_weights = myWF.get_photon_scale(phot3_pt,phot3_eta)
+
+		phot_totweights = phot1_weights * phot2_weights * phot3_weights
+
+		Event_Weight = norm_factor * phot_totweights * MC_Weight * PU_Weight/math.fabs(MC_Weight) # Just take the sign of the gen weight
 	else :
 		Event_Weight = 1.
 
-	if CRflag == 3 and SecondPass :
-		CRweight_phot1 = histo_CR2_phot1_fraction.GetBinContent(histo_CR2_phot1_fraction.FindBin(phot1_pt))
-		CRweight_phot2 = histo_CR1_phot2_fraction.GetBinContent(histo_CR1_phot2_fraction.FindBin(phot2_pt))
-		CRweight_phot3 = histo_CR2_phot3_fraction.GetBinContent(histo_CR2_phot3_fraction.FindBin(phot3_pt))
-		CRweight_phot2_low12 = histo_CR1_phot2_low12_fraction.GetBinContent(histo_CR1_phot2_low12_fraction.FindBin(phot2_pt))
-		CRweight_phot3_low12 = histo_CR2_phot3_low12_fraction.GetBinContent(histo_CR2_phot3_low12_fraction.FindBin(phot3_pt))
-		CRweight = CRweight_phot2_low12*CRweight_phot3_low12
-		#CRweight = CRweight_phot2*CRweight_phot3
-		#CRweight = CRweight_phot1*CRweight_phot2
+	#if CRflag == 3 and SecondPass :
+	#	CRweight_phot1 = histo_CR2_phot1_fraction.GetBinContent(histo_CR2_phot1_fraction.FindBin(phot1_pt))
+	#	CRweight_phot2 = histo_CR1_phot2_fraction.GetBinContent(histo_CR1_phot2_fraction.FindBin(phot2_pt))
+	#	CRweight_phot3 = histo_CR2_phot3_fraction.GetBinContent(histo_CR2_phot3_fraction.FindBin(phot3_pt))
+	#	CRweight_phot2_low12 = histo_CR1_phot2_low12_fraction.GetBinContent(histo_CR1_phot2_low12_fraction.FindBin(phot2_pt))
+	#	CRweight_phot3_low12 = histo_CR2_phot3_low12_fraction.GetBinContent(histo_CR2_phot3_low12_fraction.FindBin(phot3_pt))
+	#	CRweight = CRweight_phot2_low12*CRweight_phot3_low12
+	#	#CRweight = CRweight_phot2*CRweight_phot3
+	#	#CRweight = CRweight_phot1*CRweight_phot2
 
-		if CRweight > 0. :  
-			Event_Weight = Event_Weight * CRweight 
+	#	if CRweight > 0. :  
+	#		Event_Weight = Event_Weight * CRweight 
 
-	if CRflag == 1 and SecondPass :
-		CRweight = histo_CR2_phot3_high12_fraction.GetBinContent(histo_CR2_phot3_high12_fraction.FindBin(phot3_pt))
-		if CRweight > 0. :  
-			Event_Weight = Event_Weight * CRweight 
+	#if CRflag == 1 and SecondPass :
+	#	CRweight = histo_CR2_phot3_high12_fraction.GetBinContent(histo_CR2_phot3_high12_fraction.FindBin(phot3_pt))
+	#	if CRweight > 0. :  
+	#		Event_Weight = Event_Weight * CRweight 
 
-	if CRflag == 2 and SecondPass :
-		CRweight = histo_CR1_phot2_high12_fraction.GetBinContent(histo_CR1_phot2_high12_fraction.FindBin(phot2_pt))
-		if CRweight > 0. :  
-			Event_Weight = Event_Weight * CRweight 
+	#if CRflag == 2 and SecondPass :
+	#	CRweight = histo_CR1_phot2_high12_fraction.GetBinContent(histo_CR1_phot2_high12_fraction.FindBin(phot2_pt))
+	#	if CRweight > 0. :  
+	#		Event_Weight = Event_Weight * CRweight 
 
 	N_electrons_clean = 0.
 	for elecount in xrange(mytree.nElectron) :
-		if mytree.Electron_pt[elecount] > 5. :
+		if mytree.Electron_pt[elecount] > 5. and mytree.Electron_mvaFall17V2Iso_WPL[elecount] :
 			N_electrons_clean += 1.
 
 	N_photons = mytree.nPhoton
@@ -525,7 +494,7 @@ for jentry in xrange(nentries):
 			h_base["h_phot2_ET_high12"].Fill(phot2_pt,Event_Weight)
 			h_base["h_phot3_ET_high12"].Fill(phot3_pt,Event_Weight)
 
-		if not isData or CRflag > 0 or (isData and (threephot_invmass < 85. or threephot_invmass > 95.)) : 
+		if not isData or CRflag > 0 or (isData and (threephot_invmass < 86. or threephot_invmass > 94.)) : 
 			h_base["h_threegammass"].Fill(threephot_invmass,Event_Weight)
 
 	if select_all_but_one("h_m12") :    
