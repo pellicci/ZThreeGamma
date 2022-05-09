@@ -1,9 +1,9 @@
 #!/bin/bash
 
 HOMEDIR=/afs/cern.ch/user/p/pellicci/work/ZThreeGamma/CMSSW_10_6_27/src/StandardModel/ZThreeGamma/generation
-CMSSW_TO_USE=CMSSW_10_6_17_patch1
-INPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2016/GGG/postAPV/HLT/
-OUTPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2016/GGG/postAPV/RECO/
+CMSSW_TO_USE=CMSSW_10_6_25
+INPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2016/GGG/postAPV/RECO/
+OUTPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2016/GGG/postAPV/MINI/
 PYTHONAME=GGG_LHEGEN_2016_postAPV_v9_cfg.py
 
 echo "First argument is $1"
@@ -59,9 +59,9 @@ echo "jobnumber is $jobNumber"
 #HLT 2016 postAPV_v9
 #cmsDriver.py  --python_filename config_cfg.py --eventcontent RAWSIM --outputCommand "keep *_mix_*_*,keep *_genPUProtons_*_*" --datatier GEN-SIM-RAW --inputCommands "keep *","drop *_*_BMTF_*","drop *PixelFEDChannel*_*_*_*" --fileout file:process.root --conditions 80X_mcRun2_asymptotic_2016_TrancheIV_v6 --customise_commands 'process.source.bypassVersionCheck = cms.untracked.bool(True)' --step HLT:25ns15e33_v4 --geometry DB:Extended --filein file:processIN.root --era Run2_2016 --no_exec --mc -n -1
 #RECO 2016 postAPV_v9
-cmsDriver.py  --python_filename config_cfg.py --eventcontent AODSIM --datatier AODSIM --fileout file:process.root --conditions 106X_mcRun2_asymptotic_v13 --step RAW2DIGI,L1Reco,RECO,RECOSIM --geometry DB:Extended --filein file:processIN.root --era Run2_2016 --runUnscheduled --no_exec --mc -n -1
+#cmsDriver.py  --python_filename config_cfg.py --eventcontent AODSIM --datatier AODSIM --fileout file:process.root --conditions 106X_mcRun2_asymptotic_v13 --step RAW2DIGI,L1Reco,RECO,RECOSIM --geometry DB:Extended --filein file:processIN.root --era Run2_2016 --runUnscheduled --no_exec --mc -n -1
 #MINI 2016 postAPV_v9
-#cmsDriver.py  --python_filename config_cfg.py --eventcontent MINIAODSIM --datatier MINIAODSIM --fileout file:process.root --conditions 106X_mcRun2_asymptotic_v17 --step PAT --procModifiers run2_miniAOD_UL --geometry DB:Extended --filein file:processIN.root --era Run2_2016 --runUnscheduled --no_exec --mc -n -1
+cmsDriver.py  --python_filename config_cfg.py --eventcontent MINIAODSIM --datatier MINIAODSIM --fileout file:process.root --conditions 106X_mcRun2_asymptotic_v17 --step PAT --procModifiers run2_miniAOD_UL --geometry DB:Extended --filein file:processIN.root --era Run2_2016 --runUnscheduled --no_exec --mc -n -1
 #NANO 2016 preAPV_v9
 #cmsDriver.py  --python_filename config_cfg.py --eventcontent NANOEDMAODSIM --datatier NANOAODSIM --fileout file:process.root --conditions 106X_mcRun2_asymptotic_v17 --step NANO --filein file:processIN.root --era Run2_2016,run2_nanoAOD_106Xv2 --no_exec --mc -n -1
 
