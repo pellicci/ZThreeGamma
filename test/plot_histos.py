@@ -12,7 +12,7 @@ CR_magnify = 1. #2079./1179.
 plotOnlyData = False
 
 list_inputfiles = []
-#inputnames = ["Signal","data","GJets","ZGToLLG01J","DYJetsToLL","DiPhotonJets",CR1","CR3"]
+#inputnames = ["Signal","data","GJets","ZGToLLG01J","DYJetsToLL","DiPhotonJets","GGG"]
 #inputnames = ["Signal","data","ZGToLLG01J","DYJetsToLL","CR3","GJets","CR2"]
 #inputnames = ["Signal","data","CR3","CR1","GGG"]
 inputnames = ["Signal","data","SB"]
@@ -86,8 +86,8 @@ for filename in list_inputfiles:
 		if not "h_N" in histo_name :
 			histo_container[-1].Rebin(2)
 
-		#if histo_name == "h_threegammass" :
-		#	histo_container[-1].Rebin(2)
+		if histo_name == "h_threegammass" :
+			histo_container[-1].Rebin(2)
 
 		if "Signal" in sample_name :
 			histo_container[-1].SetLineStyle(2)   #dashed
@@ -205,10 +205,10 @@ for histo_name in list_histos:
 			hstack[histo_name].GetXaxis().SetTitle("#eta_{3}")
 
 		if histo_name == "h_threegammass" :
-			hstack[histo_name].SetMaximum(300.)
-			hstack[histo_name].Rebin(2)
-			hdata[histo_name].Rebin(2)
-			hsignal[histo_name].Rebin(2)
+			#hstack[histo_name].SetMaximum(300.)
+			#hstack[histo_name].Rebin(2)
+			#hdata[histo_name].Rebin(2)
+		 	#hsignal[histo_name].Rebin(2)
 			hstack[histo_name].GetXaxis().SetTitle("m_{#gamma#gamma#gamma} (GeV)")
 
 		if histo_name == "h_r9_1" :

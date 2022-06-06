@@ -50,6 +50,7 @@ rm histos/*
 ./histo_maker.py 0 0 1 0 finalSkim/ZThreeGamma_Signal_0.root histos/ZThreeGamma_Signal_0.root
 
 ./histo_maker.py 0 0 1 0 finalSkim/ZThreeGamma_DiPhotonJets_0.root histos/ZThreeGamma_DiPhotonJets_0.root
+./histo_maker.py 0 0 1 0 finalSkim/ZThreeGamma_DiPhotonJets40_0.root histos/ZThreeGamma_DiPhotonJets40_0.root
 ./histo_maker.py 0 0 1 0 finalSkim/ZThreeGamma_DYJetsToLL_0.root histos/ZThreeGamma_DYJetsToLL_0.root
 ./histo_maker.py 0 0 1 0 finalSkim/ZThreeGamma_ZGToLLG_01J_0.root histos/ZThreeGamma_ZGToLLG01J_0.root
 ./histo_maker.py 0 0 1 0 finalSkim/ZThreeGamma_GGG_0.root histos/ZThreeGamma_GGG_0.root
@@ -64,6 +65,7 @@ rm histos/*
 
 ./histo_maker.py 1 0 1 0 finalSkim/ZThreeGamma_Signal_1.root histos/ZThreeGamma_Signal_1.root
 
+./histo_maker.py 1 0 1 0 finalSkim/ZThreeGamma_DiPhotonJets40_1.root histos/ZThreeGamma_DiPhotonJets40_1.root
 ./histo_maker.py 1 0 1 0 finalSkim/ZThreeGamma_DiPhotonJets_1.root histos/ZThreeGamma_DiPhotonJets_1.root
 ./histo_maker.py 1 0 1 0 finalSkim/ZThreeGamma_DYJetsToLL_1.root histos/ZThreeGamma_DYJetsToLL_1.root
 ./histo_maker.py 1 0 1 0 finalSkim/ZThreeGamma_ZGToLLG_01J_1.root histos/ZThreeGamma_ZGToLLG01J_1.root
@@ -80,6 +82,7 @@ rm histos/*
 ./histo_maker.py 2 0 1 0 finalSkim/ZThreeGamma_Signal_2.root histos/ZThreeGamma_Signal_2.root
 
 ./histo_maker.py 2 0 1 0 finalSkim/ZThreeGamma_DiPhotonJets_2.root histos/ZThreeGamma_DiPhotonJets_2.root
+./histo_maker.py 2 0 1 0 finalSkim/ZThreeGamma_DiPhotonJets40_2.root histos/ZThreeGamma_DiPhotonJets40_2.root
 ./histo_maker.py 2 0 1 0 finalSkim/ZThreeGamma_DYJetsToLL_2.root histos/ZThreeGamma_DYJetsToLL_2.root
 ./histo_maker.py 2 0 1 0 finalSkim/ZThreeGamma_ZGToLLG_01J_2.root histos/ZThreeGamma_ZGToLLG01J_2.root
 ./histo_maker.py 2 0 1 0 finalSkim/ZThreeGamma_GGG_2.root histos/ZThreeGamma_GGG_2.root
@@ -88,6 +91,8 @@ rm histos/*
 ./histo_maker.py 2 0 1 0 finalSkim/ZThreeGamma_GJets200To400_2.root histos/ZThreeGamma_GJets200To400_2.root
 ./histo_maker.py 2 0 1 0 finalSkim/ZThreeGamma_GJets400To600_2.root histos/ZThreeGamma_GJets400To600_2.root
 ./histo_maker.py 2 0 1 0 finalSkim/ZThreeGamma_GJets600ToInf_2.root histos/ZThreeGamma_GJets600ToInf_2.root
+
+
 
 
 hadd -f histos/ZThreeGamma_GJets.root histos/ZThreeGamma_GJets*_?.root

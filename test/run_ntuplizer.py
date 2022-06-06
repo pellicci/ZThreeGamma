@@ -19,6 +19,7 @@ if isData_string == "data" :
 else :
     print "Running on a MC sample"
 
+myrunningEra = -1
 tmp_runningEra = sys.argv[2]
 if "2016" in tmp_runningEra :
     myrunningEra = 0
@@ -128,7 +129,7 @@ class exampleProducer(Module):
         if self.runningEra == 2 and not HLT.Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55 :
             return False
 
-        if self.runningEra == 3 and not HLT_Diphoton30_18_R9IdL_AND_HE_AND_IsoCaloId_NoPixelVeto :
+        if self.runningEra == 3 and not HLT.Diphoton30_18_R9IdL_AND_HE_AND_IsoCaloId_NoPixelVeto :
             return False
 
         self.histcount.Fill(1)
@@ -161,7 +162,7 @@ class exampleProducer(Module):
         ph2_4mom = photons[1].p4()
         ph3_4mom = photons[2].p4()
 
-        if (ph1_4mom.Pt() < 30. or ph2_4mom.Pt() < 18. or ph3_4mom.Pt() < 10.) : 
+        if (ph1_4mom.Pt() < 32. or ph2_4mom.Pt() < 20. or ph3_4mom.Pt() < 10.) : 
             return False
         self.histcount.Fill(4)
 
@@ -181,9 +182,26 @@ class exampleProducer(Module):
         Fourmom_13 = ph1_4mom + ph3_4mom
         Fourmom_23 = ph2_4mom + ph3_4mom
 
-        if Fourmom_12.M() > 110. or Fourmom_13.M() > 110. or Fourmom_23.M() > 110. :
+        #trigger offline preselection
+        isEBphot1 = True if abs(ph1_4mom.Eta()) < 1.48 else False
+        isEBphot2 = True if abs(ph2_4mom.Eta()) < 1.48 else False
+
+        if photons[0].hoe > 0.1 or photons[1].hoe > 0.1 :
             return False
-        self.histcount.Fill(8)
+        if (isEBphot1 and photons[0].r9 < 0.85) or (not isEBphot1 and photons[0].r9 < 0.9) :
+            return False
+        if (isEBphot2 and photons[1].r9 < 0.85) or (not isEBphot2 and photons[1].r9 < 0.9) :
+            return False
+        if abs(ph1_4mom.Eta()) > 2.5 or abs(ph2_4mom.Eta()) > 2.5 or abs(ph3_4mom.Eta()) > 2.5 :
+            return False
+        if (isEBphot1 and photons[0].sieie > 0.015) or (not isEBphot1 and photons[0].sieie > 0.035) :
+            return False
+        if (isEBphot2 and photons[1].sieie > 0.015) or (not isEBphot2 and photons[1].sieie > 0.035) :
+            return False
+
+        #if Fourmom_12.M() > 110. or Fourmom_13.M() > 110. or Fourmom_23.M() > 110. :
+        #    return False
+        #self.histcount.Fill(8)
 
         self.out.fillBranch("M_threegam",ph_3mass)
 

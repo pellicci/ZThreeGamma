@@ -1,5 +1,4 @@
 ZThree*.root
-ZToThreeGamma_DIGI*.py
 *train*.root
 *.weights.xml
 *.pdf

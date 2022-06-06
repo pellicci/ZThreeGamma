@@ -6,9 +6,10 @@ import math
 from array import array
 
 from Workflow_Handler import Workflow_Handler
+
 ROOT.gROOT.SetBatch(True)
 
-do_MVA_Stage = True
+do_MVA_Stage = False
 cut_MVA = 0.0891805791371
 
 def select_all_but_one(h_string="NoCut"):
@@ -16,16 +17,14 @@ def select_all_but_one(h_string="NoCut"):
 	selection_bools = dict()
 	selection_bools["h_NElectrons"] = N_electrons_clean < 1
 	selection_bools["h_NPhotons"] = N_photons == 3
-	selection_bools["h_m12"] = invmass_12 < 100. #80.
-	selection_bools["h_m13"] = invmass_13 < 100. #70.
-	selection_bools["h_m23"] = invmass_23 < 100. #70.
 	selection_bools["h_r9_1"] = phot1_r9 > 0.9
 	selection_bools["h_r9_2"] = phot2_r9 > 0.85
 	selection_bools["h_r9_3"] = phot3_r9 > 0.5
 	selection_bools["h_met_pt"] = puppiMET_pt < 80.
-	selection_bools["h_phot1_ET"] = phot1_pt > 30.
+	selection_bools["h_phot1_ET"] = phot1_pt > 32.
 	selection_bools["h_phot2_ET"] = phot2_pt > 20.
 	selection_bools["h_phot3_ET"] = phot3_pt > 10.
+	#selection_bools["h_onetrk_pt"] = onetrk_pt > 10.
 
 	result = True
 
@@ -56,15 +55,7 @@ output_filename = args.outputfile_option
 myWF = Workflow_Handler(runningEra)
 
 #Normalize to this luminsity, in fb-1
-luminosity_norm = 1.
-if runningEra == 0 :
-	luminosity_norm = 19.52
-if runningEra == 1 :
-	luminosity_norm = 16.81
-if runningEra == 2 :
-	luminosity_norm = 41.48
-if runningEra == 3 :
-	luminosity_norm = 59.83
+luminosity_norm = myWF.get_lumi_norm()
 
 # Get the files and the names of the samples
 sample_name = input_filename.split("_")[1]
@@ -77,26 +68,19 @@ if "SingleEG" in sample_name or "DoubleEG" in sample_name :
 else :
 	print "Analyzing a MC sample..."
 
-if CRflag > 0 :
-	print "Processing the control region ", CRflag
+if CRflag > 0 or useSidebands :
+	print "Processing the control region "
 else :
 	print "Processing the signal region"
 
-#if SecondPass and not CRflag == 0 :
-#	if runningEra < 2 :
-#		CRfraction_filename = "histos/CRfraction_0.root"
-#	elif runningEra == 2 :
-#		CRfraction_filename = "histos/CRfraction_2.root"
+print "This is the era ", runningEra
 
-#	fileCRfraction = ROOT.TFile(CRfraction_filename)
-#	fileCRfraction.cd()
-#	histo_CR1_phot2_low12_fraction  = fileCRfraction.Get("CR1_fraction_phot2ET_low12")
-#	histo_CR2_phot3_low12_fraction  = fileCRfraction.Get("CR2_fraction_phot3ET_low12")
-#	histo_CR1_phot2_high12_fraction = fileCRfraction.Get("CR1_fraction_phot2ET_high12")
-#	histo_CR2_phot3_high12_fraction = fileCRfraction.Get("CR2_fraction_phot3ET_high12")
-#	histo_CR1_phot2_fraction  = fileCRfraction.Get("CR1_fraction_phot2ET")
-#	histo_CR2_phot3_fraction  = fileCRfraction.Get("CR2_fraction_phot3ET")
-#	histo_CR2_phot1_fraction  = fileCRfraction.Get("CR2_fraction_phot1ET")
+if SecondPass and useSidebands :
+
+	print "This is the second pass after weights"
+	fileSBfraction = ROOT.TFile("histos/SBfraction.root")
+	fileSBfraction.cd()
+	histo_SB_phot1_fraction  = fileSBfraction.Get("h_data_phot1Et")
 
 #get the MC normalization
 Norm_xsec = myWF.get_xsec_norm(sample_name)
@@ -104,55 +88,49 @@ Norm_xsec = myWF.get_xsec_norm(sample_name)
 #prepare the histos
 h_base = dict()
 
-list_histos = ["h_threegammass","h_phot1_ET","h_phot2_ET","h_phot3_ET","h_NElectrons","h_deltaR_Zgam","h_m12","h_m13","h_m23","h_eta1","h_eta2","h_eta3","h_eta1_invmass",
-	"h_eta2_invmass","h_deltaR_12","h_deltaR_13","h_deltaR_23","h_deltaRMin","h_NPhotons","h_NJets","h_NJets_clean","h_twotrkmass","h_onetrk_pt","h_onetrk_eta","h_onetrk_phi",
-	"h_met_pt","h_phot4_ET","h_jet_pt","h_r9_1","h_r9_2","h_r9_3","h_hoe_1","h_hoe_2","h_hoe_3","h_phot2_ET_low12","h_phot3_ET_low12","h_phot2_ET_high12","h_phot3_ET_high12",
-	"h_Z_pt","h_reliso_1","h_reliso_2","h_reliso_3","h_sumEt","h_sum_gam_ID"]
+list_histos = ["h_threegammass","h_phot1_ET","h_phot2_ET","h_phot3_ET","h_NElectrons","h_deltaR_Zgam","h_m12","h_m13","h_m23","h_eta1","h_eta2","h_eta3",
+	"h_deltaR_12","h_deltaR_13","h_deltaR_23","h_deltaRMin","h_NPhotons","h_NJets","h_NJets_clean","h_twotrkmass","h_onetrk_pt","h_onetrk_eta","h_onetrk_phi",
+	"h_met_pt","h_phot4_ET","h_jet_pt","h_r9_1","h_r9_2","h_r9_3","h_hoe_1","h_hoe_2","h_hoe_3","h_Z_pt","h_reliso_1","h_reliso_2","h_reliso_3","h_sumEt","h_sum_gam_ID"]
 
-h_base[list_histos[0]] = ROOT.TH1F(list_histos[0], "M_{#gamma#gamma#gamma}", 90, 65., 110.)
-h_base[list_histos[1]] = ROOT.TH1F(list_histos[1], "E_{T,#gamma_{1}}", 60, 20., 110.)
-h_base[list_histos[2]] = ROOT.TH1F(list_histos[2], "E_{T,#gamma_{2}}", 60, 10., 110.)
-h_base[list_histos[3]] = ROOT.TH1F(list_histos[3], "E_{T,#gamma_{3}}", 60, 5., 60.)
-h_base[list_histos[4]] = ROOT.TH1F(list_histos[4], "N_{ele}", 10, -0.5, 9.5)
-h_base[list_histos[5]] = ROOT.TH1F(list_histos[5], "#Delta R 1,2-3", 30, -1., 10.)
-h_base[list_histos[6]] = ROOT.TH1F(list_histos[6], "M_{1,2}", 60, 40., 110.)
-h_base[list_histos[7]] = ROOT.TH1F(list_histos[7], "M_{1,3}", 60, 10., 110.)
-h_base[list_histos[8]] = ROOT.TH1F(list_histos[8], "M_{2,3}", 60, 10., 110.)
-h_base[list_histos[9]] = ROOT.TH1F(list_histos[9], "#eta_{#gamma_{1}}", 60, -2.6, 2.6)
-h_base[list_histos[10]] = ROOT.TH1F(list_histos[10], "#eta_{#gamma_{2}}", 60, -2.6, 2.6)
-h_base[list_histos[11]] = ROOT.TH1F(list_histos[11], "#eta_{#gamma_{3}}", 60, -2.6, 2.6)
-h_base[list_histos[12]] = ROOT.TH1F(list_histos[12], "#eta_{#gamma_{1}}", 60, -2.6, 2.6)
-h_base[list_histos[13]] = ROOT.TH1F(list_histos[13], "#eta_{#gamma_{1}}", 60, -2.6, 2.6)
-h_base[list_histos[14]] = ROOT.TH1F(list_histos[14], "#Delta R_{1,2}", 30, -1., 5.)
-h_base[list_histos[15]] = ROOT.TH1F(list_histos[15], "#Delta R_{1,3}", 30, -1., 5.)
-h_base[list_histos[16]] = ROOT.TH1F(list_histos[16], "#Delta R_{2,3}", 30, -1., 5.)
-h_base[list_histos[17]] = ROOT.TH1F(list_histos[17], "#Delta R_{min}", 30, -1., 5.)
-h_base[list_histos[18]] = ROOT.TH1F(list_histos[18], "N_{#gamma}", 10, -0.5, 9.5)
-h_base[list_histos[19]] = ROOT.TH1F(list_histos[19], "N_{jets}", 10, -0.5, 9.5)
-h_base[list_histos[20]] = ROOT.TH1F(list_histos[20], "N_{jets} clean", 10, -0.5, 9.5)
-h_base[list_histos[21]] = ROOT.TH1F(list_histos[21], "M_{trk,trk}", 30, 0., 120.)
-h_base[list_histos[22]] = ROOT.TH1F(list_histos[22], "p_{T,trk1}", 60, 0., 120.)
-h_base[list_histos[23]] = ROOT.TH1F(list_histos[23], "#eta_{trk1}}", 60, -5.5, 5.5)
-h_base[list_histos[24]] = ROOT.TH1F(list_histos[24], "#phi_{trk1}}", 60, -6.2, 6.2)
-h_base[list_histos[25]] = ROOT.TH1F(list_histos[25], "MET", 100, 0., 200.)
-h_base[list_histos[26]] = ROOT.TH1F(list_histos[26], "E_{T,#gamma_{4}}", 60, 0., 80.)
-h_base[list_histos[27]] = ROOT.TH1F(list_histos[27], "p_{T,jet}", 60, 0., 120.)
-h_base[list_histos[28]] = ROOT.TH1F(list_histos[28], "r_{9}", 60, 0.8, 1.1)
-h_base[list_histos[29]] = ROOT.TH1F(list_histos[29], "r_{9}", 60, 0.8, 1.1)
-h_base[list_histos[30]] = ROOT.TH1F(list_histos[30], "r_{9}", 60, 0.5, 1.1)
-h_base[list_histos[31]] = ROOT.TH1F(list_histos[31], "hoe", 60, 0., 0.1)
-h_base[list_histos[32]] = ROOT.TH1F(list_histos[32], "hoe", 60, 0., 0.1)
-h_base[list_histos[33]] = ROOT.TH1F(list_histos[33], "hoe", 60, 0., 0.3)
-h_base[list_histos[34]] = ROOT.TH1F(list_histos[34], "E_{T,#gamma_{2}}", 60, 10., 120.)
-h_base[list_histos[35]] = ROOT.TH1F(list_histos[35], "E_{T,#gamma_{3}}", 60, 5., 60.)
-h_base[list_histos[36]] = ROOT.TH1F(list_histos[36], "E_{T,#gamma_{2}}", 60, 10., 120.)
-h_base[list_histos[37]] = ROOT.TH1F(list_histos[37], "E_{T,#gamma_{3}}", 60, 5., 60.)
-h_base[list_histos[38]] = ROOT.TH1F(list_histos[38], "p_{T,Z}", 50, 0., 100.)
-h_base[list_histos[39]] = ROOT.TH1F(list_histos[39], "Rel Iso", 100, 0., 0.5)
-h_base[list_histos[40]] = ROOT.TH1F(list_histos[40], "Rel Iso", 100, 0., 0.5)
-h_base[list_histos[41]] = ROOT.TH1F(list_histos[41], "Rel Iso", 100, 0., 0.5)
-h_base[list_histos[42]] = ROOT.TH1F(list_histos[42], "Sum ET", 100, 0., 1000.)
-h_base[list_histos[43]] = ROOT.TH1F(list_histos[43], "Sum of photon ID", 30, 0., 3.1)
+it_h = -1
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "M_{#gamma#gamma#gamma}", 100, 60., 120.)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "E_{T,#gamma_{1}}", 60, 20., 110.)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "E_{T,#gamma_{2}}", 60, 10., 110.)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "E_{T,#gamma_{3}}", 60, 5., 60.)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "N_{ele}", 10, -0.5, 9.5)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "#Delta R 1,2-3", 30, -1., 10.)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "M_{1,2}", 60, 40., 110.)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "M_{1,3}", 60, 10., 110.)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "M_{2,3}", 60, 10., 110.)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "#eta_{#gamma_{1}}", 60, -2.6, 2.6)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "#eta_{#gamma_{2}}", 60, -2.6, 2.6)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "#eta_{#gamma_{3}}", 60, -2.6, 2.6)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "#Delta R_{1,2}", 30, -1., 5.)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "#Delta R_{1,3}", 30, -1., 5.)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "#Delta R_{2,3}", 30, -1., 5.)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "#Delta R_{min}", 30, -1., 5.)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "N_{#gamma}", 10, -0.5, 9.5)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "N_{jets}", 10, -0.5, 9.5)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "N_{jets} clean", 10, -0.5, 9.5)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "M_{trk,trk}", 30, 0., 120.)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "p_{T,trk1}", 60, 0., 120.)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "#eta_{trk1}}", 60, -5.5, 5.5)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "#phi_{trk1}}", 60, -6.2, 6.2)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "MET", 100, 0., 200.)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "E_{T,#gamma_{4}}", 60, 0., 80.)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "p_{T,jet}", 60, 0., 120.)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "r_{9}", 60, 0.8, 1.1)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "r_{9}", 60, 0.8, 1.1)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "r_{9}", 60, 0.5, 1.1)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "hoe", 60, 0., 0.1)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "hoe", 60, 0., 0.1)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "hoe", 60, 0., 0.3)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "p_{T,Z}", 50, 0., 100.)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "Rel Iso", 100, 0., 0.5)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "Rel Iso", 100, 0., 0.5)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "Rel Iso", 100, 0., 0.5)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "Sum ET", 100, 0., 1000.)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "Sum of photon ID", 30, 0., 3.1)
 
 ##Loop on events
 norm_factor = 1.
@@ -267,9 +245,6 @@ for jentry in xrange(nentries):
 	#if CRflag == 3 and (mytree.Photon_mvaID_WP80[1] or mytree.Photon_mvaID_WP80[2])  :
 	#	continue
 
-	if not (mytree.Photon_electronVeto[0] and mytree.Photon_electronVeto[1] and mytree.Photon_electronVeto[2]) :
-		continue
-
 	#Get basic variables
 	phot1_pt  = mytree.Photon_pt[0]
 	phot1_eta = mytree.Photon_eta[0]
@@ -296,23 +271,6 @@ for jentry in xrange(nentries):
 	phot3_mva = mytree.Photon_mvaID[2]
 
 	sum_phot_mva = phot1_mva + phot2_mva + phot3_mva
-
-	#trigger offline preselection
-	isEBphot1 = True if abs(phot1_eta) < 1.48 else False
-	isEBphot2 = True if abs(phot2_eta) < 1.48 else False
-
-	if phot1_hoe > 0.1 or phot2_hoe > 0.1 :
-		continue
-	if (isEBphot1 and phot1_r9 < 0.85) or (not isEBphot1 and phot1_r9 < 0.9) :
-		continue
-	if (isEBphot2 and phot2_r9 < 0.85) or (not isEBphot2 and phot2_r9 < 0.9) :
-		continue
-	if abs(phot1_eta) > 2.5 or abs(phot2_eta) > 2.5 or abs(phot3_eta) > 2.5 :
-		continue
-	if (isEBphot1 and mytree.Photon_sieie[0] > 0.015) or (not isEBphot1 and mytree.Photon_sieie[0] > 0.035) :
-		continue
-	if (isEBphot2 and mytree.Photon_sieie[1] > 0.015) or (not isEBphot2 and mytree.Photon_sieie[1] > 0.035) :
-		continue
 
 	phot1_FourMom.SetPtEtaPhiM(phot1_pt,phot1_eta,phot1_phi,0.)
 	phot2_FourMom.SetPtEtaPhiM(phot2_pt,phot2_eta,phot2_phi,0.)
@@ -343,7 +301,7 @@ for jentry in xrange(nentries):
 
 	threephot_invmass = threephot_FourMom.M()
 
-	if threephot_invmass > 110. or threephot_invmass < 65.:
+	if threephot_invmass > 120. or threephot_invmass < 60.:
 		continue
 
 	#if SecondPass and CRflag == 3 and invmass_12 > 80. :
@@ -353,7 +311,8 @@ for jentry in xrange(nentries):
 	#if SecondPass and CRflag == 2 and invmass_12 < 80. :
 	#	continue
 
-	if useSidebands and isData and (threephot_invmass > 86. and threephot_invmass < 94.) :
+	#if useSidebands and isData and (threephot_invmass > 86. and threephot_invmass < 94.) :
+	if useSidebands and isData and (threephot_invmass > 70. and threephot_invmass < 110.) :
 		continue
 
 	twotrk_invmass = -1.
@@ -396,28 +355,11 @@ for jentry in xrange(nentries):
 	else :
 		Event_Weight = 1.
 
-	#if CRflag == 3 and SecondPass :
-	#	CRweight_phot1 = histo_CR2_phot1_fraction.GetBinContent(histo_CR2_phot1_fraction.FindBin(phot1_pt))
-	#	CRweight_phot2 = histo_CR1_phot2_fraction.GetBinContent(histo_CR1_phot2_fraction.FindBin(phot2_pt))
-	#	CRweight_phot3 = histo_CR2_phot3_fraction.GetBinContent(histo_CR2_phot3_fraction.FindBin(phot3_pt))
-	#	CRweight_phot2_low12 = histo_CR1_phot2_low12_fraction.GetBinContent(histo_CR1_phot2_low12_fraction.FindBin(phot2_pt))
-	#	CRweight_phot3_low12 = histo_CR2_phot3_low12_fraction.GetBinContent(histo_CR2_phot3_low12_fraction.FindBin(phot3_pt))
-	#	CRweight = CRweight_phot2_low12*CRweight_phot3_low12
-	#	#CRweight = CRweight_phot2*CRweight_phot3
-	#	#CRweight = CRweight_phot1*CRweight_phot2
+	if SecondPass and useSidebands:
+		SBweight_phot1 = histo_SB_phot1_fraction.GetBinContent(histo_SB_phot1_fraction.FindBin(phot1_pt))
 
-	#	if CRweight > 0. :  
-	#		Event_Weight = Event_Weight * CRweight 
-
-	#if CRflag == 1 and SecondPass :
-	#	CRweight = histo_CR2_phot3_high12_fraction.GetBinContent(histo_CR2_phot3_high12_fraction.FindBin(phot3_pt))
-	#	if CRweight > 0. :  
-	#		Event_Weight = Event_Weight * CRweight 
-
-	#if CRflag == 2 and SecondPass :
-	#	CRweight = histo_CR1_phot2_high12_fraction.GetBinContent(histo_CR1_phot2_high12_fraction.FindBin(phot2_pt))
-	#	if CRweight > 0. :  
-	#		Event_Weight = Event_Weight * CRweight 
+		if SBweight_phot1 > 0. :  
+			Event_Weight = Event_Weight * SBweight_phot1 
 
 	N_electrons_clean = 0.
 	for elecount in xrange(mytree.nElectron) :
@@ -472,7 +414,6 @@ for jentry in xrange(nentries):
 		h_base["h_NJets"].Fill(N_jets,Event_Weight)
 		h_base["h_NJets_clean"].Fill(N_jets_clean,Event_Weight)
 		h_base["h_twotrkmass"].Fill(twotrk_invmass,Event_Weight)
-		h_base["h_onetrk_pt"].Fill(onetrk_pt,Event_Weight)
 		h_base["h_onetrk_eta"].Fill(onetrk_eta,Event_Weight)
 		h_base["h_onetrk_phi"].Fill(onetrk_phi,Event_Weight)
 		h_base["h_jet_pt"].Fill(jet_pt,Event_Weight)
@@ -485,22 +426,12 @@ for jentry in xrange(nentries):
 		h_base["h_reliso_3"].Fill(phot3_iso,Event_Weight)
 		h_base["h_sumEt"].Fill(puppiMET_sumEt,Event_Weight)
 		h_base["h_sum_gam_ID"].Fill(sum_phot_mva,Event_Weight)
-
-		if invmass_12 < 80. :
-			h_base["h_phot2_ET_low12"].Fill(phot2_pt,Event_Weight)
-			h_base["h_phot3_ET_low12"].Fill(phot3_pt,Event_Weight)
-
-		if invmass_12 > 80. :
-			h_base["h_phot2_ET_high12"].Fill(phot2_pt,Event_Weight)
-			h_base["h_phot3_ET_high12"].Fill(phot3_pt,Event_Weight)
+		h_base["h_m12"].Fill(invmass_12,Event_Weight)
+		h_base["h_m13"].Fill(invmass_13,Event_Weight)
+		h_base["h_m23"].Fill(invmass_23,Event_Weight)
 
 		if not isData or CRflag > 0 or (isData and (threephot_invmass < 86. or threephot_invmass > 94.)) : 
 			h_base["h_threegammass"].Fill(threephot_invmass,Event_Weight)
-
-	if select_all_but_one("h_m12") :    
-		h_base["h_m12"].Fill(invmass_12,Event_Weight)
-		h_base["h_eta1_invmass"].Fill(phot1_eta,Event_Weight)
-		h_base["h_eta2_invmass"].Fill(phot2_eta,Event_Weight)
 
 	if select_all_but_one("h_phot1_ET") : h_base["h_phot1_ET"].Fill(phot1_pt,Event_Weight)
 	if select_all_but_one("h_phot2_ET") : h_base["h_phot2_ET"].Fill(phot2_pt,Event_Weight)
@@ -508,12 +439,11 @@ for jentry in xrange(nentries):
 	if select_all_but_one("h_NElectrons") : h_base["h_NElectrons"].Fill(N_electrons_clean,Event_Weight)
 	if select_all_but_one("h_NPhotons")   : h_base["h_NPhotons"].Fill(N_photons,Event_Weight)
 	if select_all_but_one("h_NPhotons")   : h_base["h_phot4_ET"].Fill(phot4_pt,Event_Weight)
-	if select_all_but_one("h_m13")    : h_base["h_m13"].Fill(invmass_13,Event_Weight)
-	if select_all_but_one("h_m23")    : h_base["h_m23"].Fill(invmass_23,Event_Weight)
-	if select_all_but_one("h_r9_1")   : h_base["h_r9_1"].Fill(phot1_r9,Event_Weight)
-	if select_all_but_one("h_r9_2")   : h_base["h_r9_2"].Fill(phot2_r9,Event_Weight)
-	if select_all_but_one("h_r9_3")   : h_base["h_r9_3"].Fill(phot3_r9,Event_Weight)
-	if select_all_but_one("h_met_pt") : h_base["h_met_pt"].Fill(puppiMET_pt,Event_Weight)
+	if select_all_but_one("h_r9_1")       : h_base["h_r9_1"].Fill(phot1_r9,Event_Weight)
+	if select_all_but_one("h_r9_2")       : h_base["h_r9_2"].Fill(phot2_r9,Event_Weight)
+	if select_all_but_one("h_r9_3")       : h_base["h_r9_3"].Fill(phot3_r9,Event_Weight)
+	if select_all_but_one("h_met_pt")     : h_base["h_met_pt"].Fill(puppiMET_pt,Event_Weight)
+	if select_all_but_one("h_onetrk_pt")  : h_base["h_onetrk_pt"].Fill(onetrk_pt,Event_Weight)
 
 	if not select_all_but_one() :
 		continue
