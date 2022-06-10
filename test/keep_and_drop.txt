@@ -30,3 +30,4 @@ keep puWeight
 keep IsoTrack_*
 keep run*
 keep luminosityBlock*
+keep L1PreFiringWeight_Nom

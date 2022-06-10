@@ -9,8 +9,8 @@ from Workflow_Handler import Workflow_Handler
 
 ROOT.gROOT.SetBatch(True)
 
-do_MVA_Stage = False
-cut_MVA = 0.0891805791371
+do_MVA_Stage = True
+cut_MVA = 0.0918915704902
 
 def select_all_but_one(h_string="NoCut"):
 
@@ -80,7 +80,7 @@ if SecondPass and useSidebands :
 	print "This is the second pass after weights"
 	fileSBfraction = ROOT.TFile("histos/SBfraction.root")
 	fileSBfraction.cd()
-	histo_SB_phot1_fraction  = fileSBfraction.Get("h_data_phot1Et")
+	histo_SB_phot_fraction  = fileSBfraction.Get("h_data_phot1Et")
 
 #get the MC normalization
 Norm_xsec = myWF.get_xsec_norm(sample_name)
@@ -90,7 +90,8 @@ h_base = dict()
 
 list_histos = ["h_threegammass","h_phot1_ET","h_phot2_ET","h_phot3_ET","h_NElectrons","h_deltaR_Zgam","h_m12","h_m13","h_m23","h_eta1","h_eta2","h_eta3",
 	"h_deltaR_12","h_deltaR_13","h_deltaR_23","h_deltaRMin","h_NPhotons","h_NJets","h_NJets_clean","h_twotrkmass","h_onetrk_pt","h_onetrk_eta","h_onetrk_phi",
-	"h_met_pt","h_phot4_ET","h_jet_pt","h_r9_1","h_r9_2","h_r9_3","h_hoe_1","h_hoe_2","h_hoe_3","h_Z_pt","h_reliso_1","h_reliso_2","h_reliso_3","h_sumEt","h_sum_gam_ID"]
+	"h_met_pt","h_phot4_ET","h_jet_pt","h_r9_1","h_r9_2","h_r9_3","h_hoe_1","h_hoe_2","h_hoe_3","h_Z_pt","h_reliso_1","h_reliso_2","h_reliso_3","h_sumEt","h_sum_gam_ID",
+	"h_phot12_ET","h_BDT_out"]
 
 it_h = -1
 it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "M_{#gamma#gamma#gamma}", 100, 60., 120.)
@@ -131,6 +132,8 @@ it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "Rel Iso", 10
 it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "Rel Iso", 100, 0., 0.5)
 it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "Sum ET", 100, 0., 1000.)
 it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "Sum of photon ID", 30, 0., 3.1)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH2F(list_histos[it_h], "E_{T,#gamma_{1,2}}", 60, 20., 110.,60,10.,110.)
+it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "BDT output", 40, -0.51431185, 0.56848429)
 
 ##Loop on events
 norm_factor = 1.
@@ -161,23 +164,24 @@ fOut = ROOT.TFile(output_filename,"RECREATE")
 fOut.cd()
 
 #Variabiles to fill the tree
-_phot1_pt  = array('f', [0.])
-_phot2_pt  = array('f', [0.])
-_phot3_pt  = array('f', [0.])
-_phot1_hoe = array('f', [0.])
-_phot2_hoe = array('f', [0.])
-_phot3_hoe = array('f', [0.])
-_phot1_r9  = array('f', [0.])
-_phot2_r9  = array('f', [0.])
-_phot3_r9  = array('f', [0.])
-_phot1_iso = array('f', [0.])
-_phot2_iso = array('f', [0.])
-_phot3_iso = array('f', [0.])
-_met_pt    = array('f', [0.])
-_Z_pt      = array('f', [0.])
-_m_threeg  = array('f', [0.])
+_phot1_pt      = array('f', [0.])
+_phot2_pt      = array('f', [0.])
+_phot3_pt      = array('f', [0.])
+_phot1_hoe     = array('f', [0.])
+_phot2_hoe     = array('f', [0.])
+_phot3_hoe     = array('f', [0.])
+_phot1_r9      = array('f', [0.])
+_phot2_r9      = array('f', [0.])
+_phot3_r9      = array('f', [0.])
+_phot1_iso     = array('f', [0.])
+_phot2_iso     = array('f', [0.])
+_phot3_iso     = array('f', [0.])
+_met_pt        = array('f', [0.])
+_Z_pt          = array('f', [0.])
+_m_threeg      = array('f', [0.])
 _norm_phot1_pt = array('f', [0.])
 _sum_gam_id    = array('f', [0.])
+_Event_Weight  = array('f', [0.])
 
 minitree = ROOT.TTree('minitree','tree with branches')
 
@@ -197,6 +201,7 @@ minitree.Branch('MET_pT',_met_pt,'MET_pT/F')
 minitree.Branch('Z_pT',_Z_pt,'Z_pT/F')
 minitree.Branch('M_ggg',_m_threeg,'M_ggg/F')
 minitree.Branch('Sum_gam_id',_sum_gam_id,'Sum_gam_id/F')
+minitree.Branch('Event_Weight',_Event_Weight,'Event_Weight/F')
 
 #Prepare the MVA stuff
 reader = ROOT.TMVA.Reader("!Color")
@@ -301,7 +306,7 @@ for jentry in xrange(nentries):
 
 	threephot_invmass = threephot_FourMom.M()
 
-	if threephot_invmass > 120. or threephot_invmass < 60.:
+	if threephot_invmass > 120. or threephot_invmass < 65.:
 		continue
 
 	#if SecondPass and CRflag == 3 and invmass_12 > 80. :
@@ -345,21 +350,24 @@ for jentry in xrange(nentries):
 		MC_Weight = mytree.genWeight
 		PU_Weight = mytree.puWeight # Add Pile Up weight
 
+		L1prefire_Weight = mytree.L1PreFiringWeight_Nom
+
 		phot1_weights = myWF.get_photon_scale(phot1_pt,phot1_eta)
 		phot2_weights = myWF.get_photon_scale(phot2_pt,phot2_eta)
 		phot3_weights = myWF.get_photon_scale(phot3_pt,phot3_eta)
 
 		phot_totweights = phot1_weights * phot2_weights * phot3_weights
 
-		Event_Weight = norm_factor * phot_totweights * MC_Weight * PU_Weight/math.fabs(MC_Weight) # Just take the sign of the gen weight
+		Event_Weight = norm_factor * L1prefire_Weight * phot_totweights * MC_Weight * PU_Weight/math.fabs(MC_Weight) # Just take the sign of the gen weight
 	else :
 		Event_Weight = 1.
 
 	if SecondPass and useSidebands:
-		SBweight_phot1 = histo_SB_phot1_fraction.GetBinContent(histo_SB_phot1_fraction.FindBin(phot1_pt))
+		#SBweight_phot = histo_SB_phot_fraction.GetBinContent(histo_SB_phot_fraction.FindBin(phot1_pt,phot2_pt))
+		SBweight_phot = histo_SB_phot_fraction.GetBinContent(histo_SB_phot_fraction.FindBin(phot1_pt))
 
-		if SBweight_phot1 > 0. :  
-			Event_Weight = Event_Weight * SBweight_phot1 
+		if SBweight_phot > 0. :  
+			Event_Weight = Event_Weight * SBweight_phot
 
 	N_electrons_clean = 0.
 	for elecount in xrange(mytree.nElectron) :
@@ -384,22 +392,28 @@ for jentry in xrange(nentries):
 	_phot1_pt[0]  = phot1_pt
 	_phot2_pt[0]  = phot2_pt
 	_phot3_pt[0]  = phot3_pt
-	_phot1_hoe[0] = phot1_hoe
-	_phot2_hoe[0] = phot2_hoe
-	_phot3_hoe[0] = phot3_hoe
-	_phot1_r9[0]  = phot1_r9
-	_phot2_r9[0]  = phot2_r9
-	_phot3_r9[0]  = phot3_r9
-	_phot1_iso[0] = phot1_iso
-	_phot2_iso[0] = phot2_iso
-	_phot3_iso[0] = phot3_iso
-	_met_pt[0]    = puppiMET_pt
-	_Z_pt[0]      = Zed_pt
-	_m_threeg[0]  = threephot_invmass
+	_phot1_hoe[0]     = phot1_hoe
+	_phot2_hoe[0]     = phot2_hoe
+	_phot3_hoe[0]     = phot3_hoe
+	_phot1_r9[0]      = phot1_r9
+	_phot2_r9[0]      = phot2_r9
+	_phot3_r9[0]      = phot3_r9
+	_phot1_iso[0]     = phot1_iso
+	_phot2_iso[0]     = phot2_iso
+	_phot3_iso[0]     = phot3_iso
+	_met_pt[0]        = puppiMET_pt
+	_Z_pt[0]          = Zed_pt
+	_m_threeg[0]      = threephot_invmass
 	_norm_phot1_pt[0] = phot1_pt/threephot_invmass
-	_sum_gam_id[0] = sum_phot_mva
+	_sum_gam_id[0]    = sum_phot_mva
+	_Event_Weight[0]  = Event_Weight
 
-	if do_MVA_Stage and reader.EvaluateMVA("BDT") < cut_MVA :
+	MVA_val = reader.EvaluateMVA("BDT")
+
+	if do_MVA_Stage :
+		h_base["h_BDT_out"].Fill(MVA_val,Event_Weight)
+
+	if do_MVA_Stage and MVA_val < cut_MVA :
 		continue
 
 	if select_all_but_one() :
@@ -429,13 +443,14 @@ for jentry in xrange(nentries):
 		h_base["h_m12"].Fill(invmass_12,Event_Weight)
 		h_base["h_m13"].Fill(invmass_13,Event_Weight)
 		h_base["h_m23"].Fill(invmass_23,Event_Weight)
+		h_base["h_phot12_ET"].Fill(phot1_pt,phot2_pt,Event_Weight)
 
 		if not isData or CRflag > 0 or (isData and (threephot_invmass < 86. or threephot_invmass > 94.)) : 
 			h_base["h_threegammass"].Fill(threephot_invmass,Event_Weight)
 
-	if select_all_but_one("h_phot1_ET") : h_base["h_phot1_ET"].Fill(phot1_pt,Event_Weight)
-	if select_all_but_one("h_phot2_ET") : h_base["h_phot2_ET"].Fill(phot2_pt,Event_Weight)
-	if select_all_but_one("h_phot3_ET") : h_base["h_phot3_ET"].Fill(phot3_pt,Event_Weight)
+	if select_all_but_one("h_phot1_ET")   : h_base["h_phot1_ET"].Fill(phot1_pt,Event_Weight)
+	if select_all_but_one("h_phot2_ET")   : h_base["h_phot2_ET"].Fill(phot2_pt,Event_Weight)
+	if select_all_but_one("h_phot3_ET")   : h_base["h_phot3_ET"].Fill(phot3_pt,Event_Weight)
 	if select_all_but_one("h_NElectrons") : h_base["h_NElectrons"].Fill(N_electrons_clean,Event_Weight)
 	if select_all_but_one("h_NPhotons")   : h_base["h_NPhotons"].Fill(N_photons,Event_Weight)
 	if select_all_but_one("h_NPhotons")   : h_base["h_phot4_ET"].Fill(phot4_pt,Event_Weight)

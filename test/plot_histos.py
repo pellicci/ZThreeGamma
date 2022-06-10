@@ -2,9 +2,17 @@ import ROOT
 import math
 import copy
 import sys
+import tdrstyle, CMS_lumi
 
 #Supress the opening of many Canvas's
 ROOT.gROOT.SetBatch(True)   
+
+tdrstyle.setTDRStyle()
+iPeriod = 4
+iPos = 11
+CMS_lumi.lumiTextSize = 0.9
+CMS_lumi.cmsTextSize = 1.
+CMS_lumi.lumi_13TeV = "137 fb^{-1}"
 
 signal_magnify = 1.
 CR_magnify = 1. #2079./1179.
@@ -328,4 +336,5 @@ for histo_name in list_histos:
 		line_on_one.Draw("SAME")
 	################################################
 
+	CMS_lumi.CMS_lumi(canvas[histo_name], iPeriod, iPos)
 	canvas[histo_name].SaveAs("plots/" + histo_name + ".pdf")
