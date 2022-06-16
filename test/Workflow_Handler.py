@@ -49,17 +49,18 @@ class Workflow_Handler:
 		if Photon_ET < 20. :
 			Photon_ET = 20.5
 
-		ID_scale = self.ph_ID_scale_TH.GetBinContent( self.ph_ID_scale_TH.GetXaxis().FindBin(Photon_eta) , self.ph_ID_scale_TH.GetYaxis().FindBin(Photon_ET) )
+		ID_scale     = self.ph_ID_scale_TH.GetBinContent( self.ph_ID_scale_TH.GetXaxis().FindBin(Photon_eta) , self.ph_ID_scale_TH.GetYaxis().FindBin(Photon_ET) )
+		ID_scale_err = self.ph_ID_scale_TH.GetBinError( self.ph_ID_scale_TH.GetXaxis().FindBin(Photon_eta) , self.ph_ID_scale_TH.GetYaxis().FindBin(Photon_ET) )
 
 		etaBin = 1 if abs(Photon_eta) < 1.48 else 4
 		pixseed_scale = self.pixseed_scale_TH.GetBinContent(etaBin)
 
-		return ID_scale * pixseed_scale
+		return ID_scale * pixseed_scale , ID_scale_err
 
 	def get_xsec_norm(self, sample_name) :
 
 		if self.runningEra == 0 :
-			if "Signal" in sample_name : return float( (6404.0*0.000001/0.0337) *1000./ (248.*400.))
+			if "Signal" in sample_name : return float( (1981.0*0.0000001/0.033658) *1000./ (248.*400.))
 			if "DYJetsToLL" in sample_name : return float( 6404.0 *1000./ (90947213. *(1.-2.*0.1643)))
 			if "ZGToLLG" in sample_name : return float( 55.48 *1000./ (23275543.*(1.-2.*0.1847)))
 			if "DiPhotonJets" in sample_name : return float( 126.2 *1000./ (2365165. *(1.-2.*0.2363)))
@@ -71,7 +72,7 @@ class Workflow_Handler:
 			if "GJets600ToInf" in sample_name : return float( 86.58 *1000./ 4624766.)
 			if "GGG" in sample_name : return float( 8.681 *1000./ (200.*500.))
 		elif self.runningEra == 1 :
-			if "Signal" in sample_name : return float( (6404.0*0.000001/0.0337) *1000./ (247.*400.))
+			if "Signal" in sample_name : return float( (1981.0*0.0000001/0.033658) *1000./ (247.*400.))
 			if "DYJetsToLL" in sample_name : return float( 6404.0 *1000./ (71839442.*(1.-2.*0.1643)))
 			if "ZGToLLG" in sample_name : return float( 55.48 *1000./ (31562465.*(1-2.*0.1847)))
 			if "DiPhotonJets" in sample_name : return float( 126.2 *1000./ (2420370. *(1.-2.*0.2363)))
@@ -83,7 +84,7 @@ class Workflow_Handler:
 			if "GJets600ToInf" in sample_name : return float( 86.58 *1000./ 4366096.)
 			if "GGG" in sample_name : return float( 8.681 *1000./ (200.*500.))
 		elif self.runningEra == 2 :
-			if "Signal" in sample_name : return float( (6404.0*0.000001/0.0337) *1000./ (250.*400.))
+			if "Signal" in sample_name : return float( (1981.0*0.0000001/0.033658) *1000./ (250.*400.))
 			if "DYJetsToLL" in sample_name : return float( 6404.0 *1000./ (195529774.*(1.-2.*0.1643)))
 			if "ZGToLLG" in sample_name : return float( 51.1 *1000./ (29890946.*(1-2.*0.1923)))
 			if "DiPhotonJets" in sample_name : return float( 82.51 *1000./ (29676800.))
@@ -94,7 +95,7 @@ class Workflow_Handler:
 			if "GJets600ToInf" in sample_name : return float( 41.31 *1000./ 8330226.)
 			if "GGG" in sample_name : return float( 8.681 *1000./ (200.*500.))
 		elif self.runningEra == 3 :
-			if "Signal" in sample_name : return float( (6404.0*0.000001/0.0337) *1000./ (250.*400.))
+			if "Signal" in sample_name : return float( (1981.0*0.0000001/0.033658) *1000./ (250.*400.))
 			if "DYJetsToLL" in sample_name : return float( 6404.0 *1000./ (195510810.*(1.-2.*0.1643)))
 			if "ZGToLLG" in sample_name : return float( 51.1 *1000./ (29919798.*(1-2.*0.1923)))
 			if "DiPhotonJets" in sample_name : return float( 82.51 *1000./ (29948772.))

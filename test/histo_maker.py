@@ -4,6 +4,7 @@ import ROOT
 import argparse
 import math
 from array import array
+import random
 
 from Workflow_Handler import Workflow_Handler
 
@@ -352,10 +353,18 @@ for jentry in xrange(nentries):
 
 		L1prefire_Weight = mytree.L1PreFiringWeight_Nom
 
-		phot1_weights = myWF.get_photon_scale(phot1_pt,phot1_eta)
-		phot2_weights = myWF.get_photon_scale(phot2_pt,phot2_eta)
-		phot3_weights = myWF.get_photon_scale(phot3_pt,phot3_eta)
+		phot1_weights , phot1_weights_err = myWF.get_photon_scale(phot1_pt,phot1_eta)
+		phot2_weights , phot2_weights_err = myWF.get_photon_scale(phot2_pt,phot2_eta)
+		phot3_weights , phot3_weights_err = myWF.get_photon_scale(phot3_pt,phot3_eta)
 
+		#This is to do uncertainties, uncomment only in those cases
+		#multiplier = 1 if random.random() < 0.5 else -1
+		#phot1_weights = phot1_weights + multiplier * phot1_weights_err
+		#multiplier = 1 if random.random() < 0.5 else -1
+		#phot2_weights = phot2_weights + multiplier * phot2_weights_err
+		#multiplier = 1 if random.random() < 0.5 else -1
+		#phot3_weights = phot3_weights + multiplier * phot3_weights_err
+		
 		phot_totweights = phot1_weights * phot2_weights * phot3_weights
 
 		Event_Weight = norm_factor * L1prefire_Weight * phot_totweights * MC_Weight * PU_Weight/math.fabs(MC_Weight) # Just take the sign of the gen weight

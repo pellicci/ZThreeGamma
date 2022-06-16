@@ -62,6 +62,7 @@ enne_R.setConstant(1)
 
 ws = ROOT.RooWorkspace("ws_sig")
 getattr(ws,'import')(sigPDF)
+getattr(ws,'import')(dataset)
 
 _fOut = ROOT.TFile("workspaces/signal_model.root","RECREATE")
 _fOut.cd()
