@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import ROOT
 
 ROOT.gROOT.SetBatch(True)
@@ -42,8 +44,8 @@ dataloader.SetWeightExpression("Event_Weight")
 mycutSig = ROOT.TCut("")
 mycutBkg = ROOT.TCut("")
 
-#method_btd  = factory.BookMethod(dataloader, ROOT.TMVA.Types.kKNN, "kNN", ":".join(["H","!V","VarTransform=U,G,D","nkNN=3000"]))
-method_btd  = factory.BookMethod(dataloader, ROOT.TMVA.Types.kBDT, "BDT", ":".join(["H","!V","VarTransform=U,G,D","NTrees=800","MinNodeSize=2.5%","AdaBoostBeta=0.2","MaxDepth=3","BoostType=AdaBoost","NegWeightTreatment=IgnoreNegWeightsInTraining"]))
+#method_btd  = factory.BookMethod(dataloader, ROOT.TMVA.Types.kDL, "DNN", ":".join(["H","!V","VarTransform=U,G,D","Layout=TANH|512,TANH|512,TANH|512,TANH|512,LINEAR"]))
+method_btd  = factory.BookMethod(dataloader, ROOT.TMVA.Types.kBDT, "BDT", ":".join(["H","!V","VarTransform=U,G,D","NTrees=300","MinNodeSize=5%","AdaBoostBeta=0.25","MaxDepth=2","BoostType=AdaBoost","NegWeightTreatment=IgnoreNegWeightsInTraining"]))
 
 factory.TrainAllMethods()
 factory.TestAllMethods()

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import ROOT
 import argparse
@@ -37,6 +37,6 @@ h_data_phot1Et.Write()
 h_data_phot12Et.Write()
 fOut.Close()
 
-print "###############"
-print "Calculated transfer factors!"
-print "###############"
+print("###############")
+print("Calculated transfer factors!")
+print("###############")

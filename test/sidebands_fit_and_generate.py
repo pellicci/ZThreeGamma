@@ -32,8 +32,8 @@ dataset = ROOT.RooDataSet("dataset","dataset",ROOT.RooArgSet(M_ggg),ROOT.RooFit.
 
 fit_result = bkgPDF.fitTo(dataset,ROOT.RooFit.Range("left,right"),ROOT.RooFit.Save())
 
-print "minNll = ", fit_result.minNll()
-print "2Delta_minNll = ", 2*(4305.68735073-fit_result.minNll()) # If 2*(NLL(N)-NLL(N+1)) > 3.85 -> N+1 is significant improvement
+print("minNll = ", fit_result.minNll())
+print("2Delta_minNll = ", 2*(4305.68735073-fit_result.minNll())) # If 2*(NLL(N)-NLL(N+1)) > 3.85 -> N+1 is significant improvement
 
 xframe = M_ggg.frame(24)
 dataset.plotOn(xframe)

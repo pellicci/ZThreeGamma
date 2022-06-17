@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import ROOT
 import argparse
@@ -11,7 +11,7 @@ from Workflow_Handler import Workflow_Handler
 ROOT.gROOT.SetBatch(True)
 
 do_MVA_Stage = True
-cut_MVA = 0.0918915704902
+cut_MVA = 0.14626722502934086
 
 def select_all_but_one(h_string="NoCut"):
 
@@ -25,7 +25,6 @@ def select_all_but_one(h_string="NoCut"):
 	selection_bools["h_phot1_ET"] = phot1_pt > 32.
 	selection_bools["h_phot2_ET"] = phot2_pt > 20.
 	selection_bools["h_phot3_ET"] = phot3_pt > 10.
-	#selection_bools["h_onetrk_pt"] = onetrk_pt > 10.
 
 	result = True
 
@@ -65,20 +64,20 @@ sample_name = input_filename.split("_")[1]
 isData = False
 if "SingleEG" in sample_name or "DoubleEG" in sample_name :
 	isData = True
-	print "Analyzing a data sample..."
+	print("Analyzing a data sample...")
 else :
-	print "Analyzing a MC sample..."
+	print("Analyzing a MC sample...")
 
 if CRflag > 0 or useSidebands :
-	print "Processing the control region "
+	print("Processing the control region ")
 else :
-	print "Processing the signal region"
+	print("Processing the signal region")
 
-print "This is the era ", runningEra
+print("This is the era ", runningEra)
 
 if SecondPass and useSidebands :
 
-	print "This is the second pass after weights"
+	print("This is the second pass after weights")
 	fileSBfraction = ROOT.TFile("histos/SBfraction.root")
 	fileSBfraction.cd()
 	histo_SB_phot_fraction  = fileSBfraction.Get("h_data_phot1Et")
@@ -140,11 +139,11 @@ it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "BDT output",
 norm_factor = 1.
 if not isData:
 	norm_factor = Norm_xsec*luminosity_norm
-	print "Normalization factor used for ", sample_name, " = ", norm_factor
+	print("Normalization factor used for ", sample_name, " = ", norm_factor)
 	
 root_file = ROOT.TFile(input_filename)
 mytree = root_file.Get("Events")
-print "Processing Sample ", sample_name
+print("Processing Sample ", sample_name)
 
 Nevts_per_sample   = 0. # Count the number of events in input per each sample processed
 Nevts_selected     = 0. # Count the number of events survived per each sample processed
@@ -223,9 +222,9 @@ reader.AddVariable("Sum_gam_id",_sum_gam_id)
 if do_MVA_Stage :
 	reader.BookMVA("BDT","MVA/trained/BDT_trained.xml")# First argument is arbitrary. To be chosen in order to distinguish among methods
 
-print "This sample has ", mytree.GetEntriesFast(), " events"
+print("This sample has ", mytree.GetEntriesFast(), " events")
 
-for jentry in xrange(nentries):
+for jentry in range(nentries):
 	ientry = mytree.LoadTree( jentry )
 	if ientry < 0:
 		break
@@ -236,7 +235,7 @@ for jentry in xrange(nentries):
 	Nevts_per_sample = Nevts_per_sample + 1
 
 	if (Nevts_per_sample/100000.).is_integer() :
-		print "Processed ", Nevts_per_sample, " events..."
+		print("Processed ", Nevts_per_sample, " events...")
 
 	#Select based on the control region flag
 	#if not mytree.Photon_mvaID_WP80[0] :
@@ -318,7 +317,7 @@ for jentry in xrange(nentries):
 	#	continue
 
 	#if useSidebands and isData and (threephot_invmass > 86. and threephot_invmass < 94.) :
-	if useSidebands and isData and (threephot_invmass > 70. and threephot_invmass < 110.) :
+	if useSidebands and isData and (threephot_invmass > 75. and threephot_invmass < 105.) :
 		continue
 
 	twotrk_invmass = -1.
@@ -353,21 +352,32 @@ for jentry in xrange(nentries):
 
 		L1prefire_Weight = mytree.L1PreFiringWeight_Nom
 
-		phot1_weights , phot1_weights_err = myWF.get_photon_scale(phot1_pt,phot1_eta)
-		phot2_weights , phot2_weights_err = myWF.get_photon_scale(phot2_pt,phot2_eta)
-		phot3_weights , phot3_weights_err = myWF.get_photon_scale(phot3_pt,phot3_eta)
+		phot1ID_weights , phot1ID_weights_err = myWF.get_photon_scale(phot1_pt,phot1_eta)
+		phot2ID_weights , phot2ID_weights_err = myWF.get_photon_scale(phot2_pt,phot2_eta)
+		phot3ID_weights , phot3ID_weights_err = myWF.get_photon_scale(phot3_pt,phot3_eta)
 
-		#This is to do uncertainties, uncomment only in those cases
-		#multiplier = 1 if random.random() < 0.5 else -1
-		#phot1_weights = phot1_weights + multiplier * phot1_weights_err
-		#multiplier = 1 if random.random() < 0.5 else -1
-		#phot2_weights = phot2_weights + multiplier * phot2_weights_err
-		#multiplier = 1 if random.random() < 0.5 else -1
-		#phot3_weights = phot3_weights + multiplier * phot3_weights_err
+		#This is to do systematics, uncomment only in those cases
+		multiplier = 1 if random.random() < 0.5 else -1
+		phot1ID_weights = phot1ID_weights + multiplier * phot1ID_weights_err
+		multiplier = 1 if random.random() < 0.5 else -1
+		phot2ID_weights = phot2ID_weights + multiplier * phot2ID_weights_err
+		multiplier = 1 if random.random() < 0.5 else -1
+		phot3ID_weights = phot3ID_weights + multiplier * phot3ID_weights_err
 		
-		phot_totweights = phot1_weights * phot2_weights * phot3_weights
+		phot_IDweights = phot1ID_weights * phot2ID_weights * phot3ID_weights
 
-		Event_Weight = norm_factor * L1prefire_Weight * phot_totweights * MC_Weight * PU_Weight/math.fabs(MC_Weight) # Just take the sign of the gen weight
+		isBB = False
+		if runningEra < 2 and phot1_eta < 1.5 and phot2_eta < 1.5 :
+			isBB = True
+
+		phot1_trig_weight , phot1_trig_weight_err = myWF.get_trig_scale(phot1_pt,phot1_eta,phot1_r9,True,isBB) 
+		phot2_trig_weight , phot2_trig_weight_err = myWF.get_trig_scale(phot2_pt,phot2_eta,phot2_r9,False,isBB)
+		#this part is for systematics
+		#phot1_trig_weight = phot1_trig_weight + phot1_trig_weight_err
+		#phot2_trig_weight = phot2_trig_weight + phot2_trig_weight_err
+		phot_trig_weight = phot1_trig_weight * phot2_trig_weight
+
+		Event_Weight = norm_factor * L1prefire_Weight * phot_IDweights * phot_trig_weight * MC_Weight * PU_Weight/math.fabs(MC_Weight) # Just take the sign of the gen weight
 	else :
 		Event_Weight = 1.
 
@@ -379,7 +389,7 @@ for jentry in xrange(nentries):
 			Event_Weight = Event_Weight * SBweight_phot
 
 	N_electrons_clean = 0.
-	for elecount in xrange(mytree.nElectron) :
+	for elecount in range(mytree.nElectron) :
 		if mytree.Electron_pt[elecount] > 5. and mytree.Electron_mvaFall17V2Iso_WPL[elecount] :
 			N_electrons_clean += 1.
 
@@ -388,7 +398,7 @@ for jentry in xrange(nentries):
 	N_jets = mytree.nJet
 	N_jets_clean = 0.
 	jet_pt = 0.
-	for jetcount in xrange(mytree.nJet) :
+	for jetcount in range(mytree.nJet) :
 		if mytree.Jet_jetId[jetcount] > 1. :
 			tmp_jet_pt = mytree.Jet_pt[jetcount]
 			if mytree.Jet_puId[jetcount] < 6 and tmp_jet_pt < 50. :
@@ -417,13 +427,12 @@ for jentry in xrange(nentries):
 	_sum_gam_id[0]    = sum_phot_mva
 	_Event_Weight[0]  = Event_Weight
 
-	MVA_val = reader.EvaluateMVA("BDT")
-
 	if do_MVA_Stage :
+		MVA_val = reader.EvaluateMVA("BDT")
 		h_base["h_BDT_out"].Fill(MVA_val,Event_Weight)
 
-	if do_MVA_Stage and MVA_val < cut_MVA :
-		continue
+		if MVA_val < cut_MVA :
+			continue
 
 	if select_all_but_one() :
 		h_base["h_deltaR_Zgam"].Fill(deltaR_Zgam,Event_Weight)
@@ -484,9 +493,9 @@ for hist_name in list_histos:
 minitree.Write()
 fOut.Close()
 
-print "Number of expected events for ", luminosity_norm, " in fb-1, for sample " , sample_name
-print "Number of events processed = ", Nevts_per_sample
-print "Number of events selected = ", Nevts_selected
-print "Number of events expected = ", Nevts_expected
-print "###################"
-print "###################"
+print("Number of expected events for ", luminosity_norm, " in fb-1, for sample " , sample_name)
+print("Number of events processed = ", Nevts_per_sample)
+print("Number of events selected = ", Nevts_selected)
+print("Number of events expected = ", Nevts_expected)
+print("###################")
+print("###################")

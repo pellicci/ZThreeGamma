@@ -1,8 +1,10 @@
-from DataFormats.FWLite import Events, Handle
+#from DataFormats.FWLite import Events, Handle
 import ROOT
 import tdrstyle, CMS_lumi
 
 ROOT.gROOT.SetBatch(True)
+
+usedata = False
 
 iPeriod = 4
 iPos = 11
@@ -19,8 +21,6 @@ h_BDT_Train_bkg = fNominal.Get("default/Method_BDT/BDT/MVA_BDT_Train_B")
 fdata = ROOT.TFile("../histos/ZThreeGamma_data.root")
 h_BDT_data = fdata.Get("h_BDT_out")
 
-h_BDT_data.Scale(h_BDT_bkg.Integral()/h_BDT_data.Integral())
-
 leg1 = ROOT.TLegend(0.65,0.62,0.9,0.87)
 leg1.SetHeader("")
 leg1.SetFillColor(0)
@@ -31,7 +31,18 @@ leg1.SetLineWidth(1)
 leg1.SetFillStyle(0)
 leg1.AddEntry(h_BDT_sig,"Signal","f")
 leg1.AddEntry(h_BDT_bkg,"Background","f")
-leg1.AddEntry(h_BDT_data,"Data","ep")
+
+h_BDT_sig.Rebin(2)
+h_BDT_bkg.Rebin(2)
+h_BDT_Train_sig.Rebin(2)
+h_BDT_Train_bkg.Rebin(2)
+
+if usedata :
+	h_BDT_data.Rebin(2)
+	h_BDT_data.Scale(h_BDT_bkg.Integral()/h_BDT_data.Integral())
+	leg1.AddEntry(h_BDT_data,"Data","ep")
+	h_BDT_data.SetTitle("")
+	h_BDT_data.SetMarkerStyle(20)
 
 ROOT.gStyle.SetErrorX(0.)
 ROOT.gStyle.SetOptStat(0)
@@ -57,17 +68,14 @@ h_BDT_Train_bkg.SetLineColor(9)
 h_BDT_Train_bkg.SetMarkerColor(9)
 h_BDT_Train_bkg.SetMarkerStyle(21)
 
-h_BDT_data.SetTitle("")
-h_BDT_data.SetMarkerStyle(20)
-
 h_BDT_sig.Draw("E1, hist")
 h_BDT_bkg.Draw("SAME, E1, hist")
-#h_BDT_Train_sig.Draw("SAME, lep")
-#h_BDT_Train_bkg.Draw("SAME, lep")
-h_BDT_data.Draw("SAME, lep")
+h_BDT_Train_sig.Draw("SAME, lep")
+h_BDT_Train_bkg.Draw("SAME, lep")
+if usedata :
+	h_BDT_data.Draw("SAME, lep")
 leg1.Draw("SAME")
 CMS_lumi.CMS_lumi(canvas1, iPeriod, iPos)
 
 canvas1.Print("default/BDT_output.pdf")
 
-raw_input()

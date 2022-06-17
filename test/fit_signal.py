@@ -7,14 +7,15 @@ ROOT.gROOT.SetBatch(True)
 
 tdrstyle.setTDRStyle()
 
-ROOT.gROOT.ProcessLineSync(".L dCB/RooDoubleCBFast.cc+")
+#ROOT.gROOT.ProcessLineSync(".L dCB/RooDoubleCBFast.cc+")
 
-M_ggg = ROOT.RooRealVar("M_ggg","Three photon invariant mass",70.,110.,"GeV")
+M_ggg        = ROOT.RooRealVar("M_ggg","Three photon invariant mass",70.,110.,"GeV")
+Event_Weight = ROOT.RooRealVar("Event_Weight","Event Weight",-100.,100.,"GeV")
 
 _fileIn = ROOT.TFile("histos/ZThreeGamma_Signal.root")
 _treeIn = _fileIn.Get("minitree")
 
-dataset = ROOT.RooDataSet("dataset","dataset",ROOT.RooArgSet(M_ggg),ROOT.RooFit.Import(_treeIn))
+dataset = ROOT.RooDataSet("dataset","dataset",ROOT.RooArgSet(M_ggg,Event_Weight),ROOT.RooFit.Import(_treeIn),ROOT.RooFit.WeightVar("Event_Weight"))
 
 m0 = ROOT.RooRealVar("m0","m0",91.,85.,95.)
 sigma   = ROOT.RooRealVar("sigma","sigma",2.,0.1,5.)
@@ -23,7 +24,7 @@ alpha_R = ROOT.RooRealVar("alpha_R","alpha_R",1.,0.,10.)
 enne_L  = ROOT.RooRealVar("enne_L","enne_L",10.,0.1,100.)
 enne_R  = ROOT.RooRealVar("enne_R","enne_R",10.,0.1,100.)
 
-sigPDF = ROOT.RooDoubleCBFast("sigPDF", "Double Crystal Ball", M_ggg, m0, sigma, alpha_L, enne_L, alpha_R, enne_R)
+sigPDF = ROOT.RooCrystalBall("sigPDF", "Double Crystal Ball", M_ggg, m0, sigma, alpha_L, enne_L, alpha_R, enne_R)
 
 sigPDF.fitTo(dataset)
 
@@ -51,7 +52,7 @@ xframe.Draw()
 pad4.cd()
 framePull.Draw()
 canvas.Update()
-canvas.SaveAs("fit_signal.pdf")
+canvas.SaveAs("plots/fit_signal.pdf")
 
 m0.setConstant(1)
 sigma.setConstant(1)

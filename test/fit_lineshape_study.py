@@ -21,7 +21,7 @@ bkgPDF = ws_bkg.pdf("bkgPDF")
 
 lumi_val = 19.52+16.81+41.48+59.83
 
-eff_sig = ROOT.RooRealVar("eff_sig","eff_sig", (1.81784085122 + 1.5544722561 + 3.79318274056 + 5.46060553676)/0.0000001)
+eff_sig = ROOT.RooRealVar("eff_sig","eff_sig", (1.754431953634491 + 1.4623609380020386 + 3.342346404776447 + 5.130534059544491)/0.0000001)
 BRvar   = ROOT.RooRealVar("BRvar","BRvar", 0.0000001,0.,0.000001)
 Nsig    = ROOT.RooFormulaVar("Nsig","@0*@1",ROOT.RooArgList(eff_sig,BRvar))
 
@@ -38,7 +38,7 @@ tot_pdf.plotOn(xframe)
 canvas = ROOT.TCanvas()
 canvas.cd()
 xframe.Draw()
-canvas.SaveAs("fit_alllineshape.pdf")
+canvas.SaveAs("plotsfit_alllineshape.pdf")
 
 _fileIn = ROOT.TFile("histos/ZThreeGamma_data.root")
 _treeIn = _fileIn.Get("minitree")

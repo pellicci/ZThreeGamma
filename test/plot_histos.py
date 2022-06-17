@@ -10,11 +10,12 @@ ROOT.gROOT.SetBatch(True)
 tdrstyle.setTDRStyle()
 iPeriod = 4
 iPos = 11
-CMS_lumi.lumiTextSize = 0.9
+CMS_lumi.lumiTextSize = 0.6
 CMS_lumi.cmsTextSize = 1.
+CMS_lumi.lumiTextOffset = 0.45
 CMS_lumi.lumi_13TeV = "137 fb^{-1}"
 
-signal_magnify = 1.
+signal_magnify = 100.
 CR_magnify = 1. #2079./1179.
 
 plotOnlyData = False
@@ -66,7 +67,7 @@ colors_mask["GGG"]          = ROOT.kYellow-8
 colors_mask["SB"]           = ROOT.kBlue-7
 
 #Eyecandy
-leg1 = ROOT.TLegend(0.6868687,0.6120093,0.9511784,0.9491917) #right positioning
+leg1 = ROOT.TLegend(0.68,0.61,0.94,0.94) #right positioning
 leg1.SetHeader(" ")
 leg1.SetFillColor(0)
 leg1.SetBorderSize(0)
@@ -163,7 +164,8 @@ for histo_name in list_histos:
 	if not plotOnlyData :
 
 		if useSidebands :
-			hstack[histo_name].Scale(hdata[histo_name].Integral()/hstack[histo_name].Integral())
+			if "BDT" not in histo_name :
+				hstack[histo_name].Scale(hdata[histo_name].Integral()/hstack[histo_name].Integral())
 
 		hstack[histo_name].Draw("histo")
 		hstack[histo_name].GetYaxis().SetTitleSize(0.07)
@@ -220,13 +222,15 @@ for histo_name in list_histos:
 			hstack[histo_name].GetXaxis().SetTitle("m_{#gamma#gamma#gamma} (GeV)")
 
 		if histo_name == "h_r9_1" :
+			hstack[histo_name].SetMaximum(7000.)
 			hstack[histo_name].GetXaxis().SetTitle("r_{9,1}")
 
 		if histo_name == "h_r9_2" :
+			hstack[histo_name].SetMaximum(6000.)
 			hstack[histo_name].GetXaxis().SetTitle("r_{9,2}")
 
 		if histo_name == "h_r9_3" :
-			hstack[histo_name].SetMaximum(2500.)
+			hstack[histo_name].SetMaximum(4000.)
 			hstack[histo_name].GetXaxis().SetTitle("r_{9,3}")
 
 		if histo_name == "h_hoe_1" :
@@ -237,6 +241,15 @@ for histo_name in list_histos:
 
 		if histo_name == "h_hoe_3" :
 			hstack[histo_name].GetXaxis().SetTitle("(H/E)_{3}")
+
+		if histo_name == "h_reliso_1" :
+			hstack[histo_name].GetXaxis().SetTitle("R_{iso}^{#gamma_{1}}")
+
+		if histo_name == "h_reliso_2" :
+			hstack[histo_name].GetXaxis().SetTitle("R_{iso}^{#gamma_{2}}")
+
+		if histo_name == "h_reliso_3" :
+			hstack[histo_name].GetXaxis().SetTitle("R_{iso}^{#gamma_{3}}")
 
 		if histo_name == "h_NPhotons" :
 			hstack[histo_name].GetXaxis().SetTitle("N_{#gamma}")
