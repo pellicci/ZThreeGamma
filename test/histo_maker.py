@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import ROOT
 import argparse
@@ -64,20 +64,20 @@ sample_name = input_filename.split("_")[1]
 isData = False
 if "SingleEG" in sample_name or "DoubleEG" in sample_name :
 	isData = True
-	print("Analyzing a data sample...")
+	print "Analyzing a data sample..."
 else :
-	print("Analyzing a MC sample...")
+	print "Analyzing a MC sample..."
 
 if CRflag > 0 or useSidebands :
-	print("Processing the control region ")
+	print "Processing the control region "
 else :
-	print("Processing the signal region")
+	print "Processing the signal region" 
 
-print("This is the era ", runningEra)
+print "This is the era ", runningEra
 
 if SecondPass and useSidebands :
 
-	print("This is the second pass after weights")
+	print "This is the second pass after weights"
 	fileSBfraction = ROOT.TFile("histos/SBfraction.root")
 	fileSBfraction.cd()
 	histo_SB_phot_fraction  = fileSBfraction.Get("h_data_phot1Et")
@@ -139,11 +139,11 @@ it_h+=1 ; h_base[list_histos[it_h]] = ROOT.TH1F(list_histos[it_h], "BDT output",
 norm_factor = 1.
 if not isData:
 	norm_factor = Norm_xsec*luminosity_norm
-	print("Normalization factor used for ", sample_name, " = ", norm_factor)
+	print "Normalization factor used for ", sample_name, " = ", norm_factor 
 	
 root_file = ROOT.TFile(input_filename)
 mytree = root_file.Get("Events")
-print("Processing Sample ", sample_name)
+print "Processing Sample ", sample_name
 
 Nevts_per_sample   = 0. # Count the number of events in input per each sample processed
 Nevts_selected     = 0. # Count the number of events survived per each sample processed
@@ -222,9 +222,9 @@ reader.AddVariable("Sum_gam_id",_sum_gam_id)
 if do_MVA_Stage :
 	reader.BookMVA("BDT","MVA/trained/BDT_trained.xml")# First argument is arbitrary. To be chosen in order to distinguish among methods
 
-print("This sample has ", mytree.GetEntriesFast(), " events")
+print "This sample has ", mytree.GetEntriesFast(), " events"
 
-for jentry in range(nentries):
+for jentry in xrange(nentries):
 	ientry = mytree.LoadTree( jentry )
 	if ientry < 0:
 		break
@@ -235,7 +235,7 @@ for jentry in range(nentries):
 	Nevts_per_sample = Nevts_per_sample + 1
 
 	if (Nevts_per_sample/100000.).is_integer() :
-		print("Processed ", Nevts_per_sample, " events...")
+		print "Processed ", Nevts_per_sample, " events..."
 
 	#Select based on the control region flag
 	#if not mytree.Photon_mvaID_WP80[0] :
@@ -357,12 +357,12 @@ for jentry in range(nentries):
 		phot3ID_weights , phot3ID_weights_err = myWF.get_photon_scale(phot3_pt,phot3_eta)
 
 		#This is to do systematics, uncomment only in those cases
-		multiplier = 1 if random.random() < 0.5 else -1
-		phot1ID_weights = phot1ID_weights + multiplier * phot1ID_weights_err
-		multiplier = 1 if random.random() < 0.5 else -1
-		phot2ID_weights = phot2ID_weights + multiplier * phot2ID_weights_err
-		multiplier = 1 if random.random() < 0.5 else -1
-		phot3ID_weights = phot3ID_weights + multiplier * phot3ID_weights_err
+		#multiplier = 1 if random.random() < 0.5 else -1
+		#phot1ID_weights = phot1ID_weights + multiplier * phot1ID_weights_err
+		#multiplier = 1 if random.random() < 0.5 else -1
+		#phot2ID_weights = phot2ID_weights + multiplier * phot2ID_weights_err
+		#multiplier = 1 if random.random() < 0.5 else -1
+		#phot3ID_weights = phot3ID_weights + multiplier * phot3ID_weights_err
 		
 		phot_IDweights = phot1ID_weights * phot2ID_weights * phot3ID_weights
 
@@ -389,7 +389,7 @@ for jentry in range(nentries):
 			Event_Weight = Event_Weight * SBweight_phot
 
 	N_electrons_clean = 0.
-	for elecount in range(mytree.nElectron) :
+	for elecount in xrange(mytree.nElectron) :
 		if mytree.Electron_pt[elecount] > 5. and mytree.Electron_mvaFall17V2Iso_WPL[elecount] :
 			N_electrons_clean += 1.
 
@@ -398,7 +398,7 @@ for jentry in range(nentries):
 	N_jets = mytree.nJet
 	N_jets_clean = 0.
 	jet_pt = 0.
-	for jetcount in range(mytree.nJet) :
+	for jetcount in xrange(mytree.nJet) :
 		if mytree.Jet_jetId[jetcount] > 1. :
 			tmp_jet_pt = mytree.Jet_pt[jetcount]
 			if mytree.Jet_puId[jetcount] < 6 and tmp_jet_pt < 50. :
@@ -493,9 +493,9 @@ for hist_name in list_histos:
 minitree.Write()
 fOut.Close()
 
-print("Number of expected events for ", luminosity_norm, " in fb-1, for sample " , sample_name)
-print("Number of events processed = ", Nevts_per_sample)
-print("Number of events selected = ", Nevts_selected)
-print("Number of events expected = ", Nevts_expected)
-print("###################")
-print("###################")
+print "Number of expected events for ", luminosity_norm, " in fb-1, for sample " , sample_name
+print "Number of events processed = ", Nevts_per_sample
+print "Number of events selected = ", Nevts_selected
+print "Number of events expected = ", Nevts_expected
+print "###################"
+print "###################"

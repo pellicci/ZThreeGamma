@@ -7,7 +7,7 @@ ROOT.gROOT.SetBatch(True)
 
 tdrstyle.setTDRStyle()
 
-#ROOT.gROOT.ProcessLineSync(".L dCB/RooDoubleCBFast.cc+")
+ROOT.gROOT.ProcessLineSync(".L dCB/RooDoubleCBFast.cc+")
 
 M_ggg        = ROOT.RooRealVar("M_ggg","Three photon invariant mass",70.,110.,"GeV")
 Event_Weight = ROOT.RooRealVar("Event_Weight","Event Weight",-100.,100.,"GeV")
@@ -24,7 +24,7 @@ alpha_R = ROOT.RooRealVar("alpha_R","alpha_R",1.,0.,10.)
 enne_L  = ROOT.RooRealVar("enne_L","enne_L",10.,0.1,100.)
 enne_R  = ROOT.RooRealVar("enne_R","enne_R",10.,0.1,100.)
 
-sigPDF = ROOT.RooCrystalBall("sigPDF", "Double Crystal Ball", M_ggg, m0, sigma, alpha_L, enne_L, alpha_R, enne_R)
+sigPDF = ROOT.RooDoubleCBFast("sigPDF", "Double Crystal Ball", M_ggg, m0, sigma, alpha_L, enne_L, alpha_R, enne_R)
 
 sigPDF.fitTo(dataset)
 

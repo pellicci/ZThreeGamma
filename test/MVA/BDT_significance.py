@@ -59,14 +59,14 @@ signif_maximizing_eff = sig_eff_array[np.argmax(signif_array)]
 
 BDT_output = 0.
 
-for entry in range(h_BDT_effS.GetNbinsX()):
+for entry in xrange(h_BDT_effS.GetNbinsX()):
 
 	effS = h_BDT_effS.GetBinContent(entry)
 	effS = float(format(effS, '.2f'))
 	signif_maximizing_eff = float(format(signif_maximizing_eff, '.2f'))
-	print("effS: ", effS, "signif_max_eff: ", signif_maximizing_eff)
+	print "effS: ", effS, "signif_max_eff: ", signif_maximizing_eff
 	if effS == signif_maximizing_eff:
 		BDT_output =  h_BDT_effS.GetBinCenter(entry)
 		_effS = effS
 
-print("For a signal efficiency of ", _effS, "the BDT output is :", BDT_output)
+print "For a signal efficiency of ", _effS, "the BDT output is :", BDT_output
