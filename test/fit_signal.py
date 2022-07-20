@@ -19,14 +19,14 @@ dataset = ROOT.RooDataSet("dataset","dataset",ROOT.RooArgSet(M_ggg,Event_Weight)
 
 m0 = ROOT.RooRealVar("m0","m0",91.,85.,95.)
 sigma   = ROOT.RooRealVar("sigma","sigma",2.,0.1,5.)
-alpha_L = ROOT.RooRealVar("alpha_L","alpha_L",1.,0.,10.)
-alpha_R = ROOT.RooRealVar("alpha_R","alpha_R",1.,0.,10.)
-enne_L  = ROOT.RooRealVar("enne_L","enne_L",10.,0.1,100.)
-enne_R  = ROOT.RooRealVar("enne_R","enne_R",10.,0.1,100.)
+alpha_L = ROOT.RooRealVar("alpha_L","alpha_L",1.,0.,20.)
+alpha_R = ROOT.RooRealVar("alpha_R","alpha_R",1.,0.,20.)
+enne_L  = ROOT.RooRealVar("enne_L","enne_L",1.,0.1,100.)
+enne_R  = ROOT.RooRealVar("enne_R","enne_R",1.,0.1,100.)
 
 sigPDF = ROOT.RooDoubleCBFast("sigPDF", "Double Crystal Ball", M_ggg, m0, sigma, alpha_L, enne_L, alpha_R, enne_R)
 
-sigPDF.fitTo(dataset)
+sigPDF.fitTo(dataset,ROOT.RooFit.Minos(1))
 
 xframe = M_ggg.frame(25)
 dataset.plotOn(xframe)

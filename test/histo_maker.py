@@ -11,7 +11,7 @@ from Workflow_Handler import Workflow_Handler
 ROOT.gROOT.SetBatch(True)
 
 do_MVA_Stage = True
-cut_MVA = 0.14626722502934086
+cut_MVA = 0.209714029086
 
 def select_all_but_one(h_string="NoCut"):
 
@@ -206,16 +206,16 @@ minitree.Branch('Event_Weight',_Event_Weight,'Event_Weight/F')
 #Prepare the MVA stuff
 reader = ROOT.TMVA.Reader("!Color")
 
-reader.AddVariable("Phot1_hoe",_phot1_hoe)
+#reader.AddVariable("Phot1_hoe",_phot1_hoe)
 reader.AddVariable("Phot2_hoe",_phot2_hoe)
 reader.AddVariable("Phot3_hoe",_phot3_hoe)
-reader.AddVariable("Phot1_r9",_phot1_r9)
+#reader.AddVariable("Phot1_r9",_phot1_r9)
 reader.AddVariable("Phot2_r9",_phot2_r9)
 reader.AddVariable("Phot3_r9",_phot3_r9)
-reader.AddVariable("Phot1_iso",_phot1_iso)
+#reader.AddVariable("Phot1_iso",_phot1_iso)
 reader.AddVariable("Phot2_iso",_phot2_iso)
 reader.AddVariable("Phot3_iso",_phot3_iso)
-reader.AddVariable("MET_pT",_met_pt)
+#reader.AddVariable("MET_pT",_met_pt)
 reader.AddVariable("Z_pT",_Z_pt)
 reader.AddVariable("Sum_gam_id",_sum_gam_id)
 
@@ -274,6 +274,21 @@ for jentry in xrange(nentries):
 	phot3_hoe = mytree.Photon_hoe[2]
 	phot3_iso = mytree.Photon_pfRelIso03_all[2]
 	phot3_mva = mytree.Photon_mvaID[2]
+
+	##This is for smear systematics, comment otherwise
+	#phot1_pt = phot1_pt + mytree.Photon_dEsigmaUp[0]
+	#phot2_pt = phot2_pt + mytree.Photon_dEsigmaUp[1]
+	#phot3_pt = phot3_pt + mytree.Photon_dEsigmaUp[2]
+	#if phot1_pt < 32. or phot2_pt < 20. or phot3_pt < 10. :
+	#	continue
+
+	#This is for scale systematics on data, comment otherwise
+	#if isData :
+	#	phot1_pt = phot1_pt - mytree.Photon_dEscaleDown[0]
+	#	phot2_pt = phot2_pt - mytree.Photon_dEscaleDown[1]
+	#	phot3_pt = phot3_pt - mytree.Photon_dEscaleDown[2]
+	#	if phot1_pt < 32. or phot2_pt < 20. or phot3_pt < 10. :
+	#		continue
 
 	sum_phot_mva = phot1_mva + phot2_mva + phot3_mva
 

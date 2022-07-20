@@ -5,6 +5,7 @@ import ROOT
 ROOT.gROOT.SetBatch(True)   
 
 ROOT.gROOT.ProcessLineSync(".L dCB/RooDoubleCBFast.cc+")
+ROOT.gROOT.ProcessLineSync(".L dCB/RooMultiPdf.cxx+")
 
 _fSignal = ROOT.TFile("workspaces/signal_model.root")
 ws_sig = _fSignal.Get("ws_sig")
@@ -17,19 +18,20 @@ data_obs = _fBkg.Get("data_obs")
 M_ggg = ws_sig.var("M_ggg")
 
 sigPDF = ws_sig.pdf("sigPDF")
-bkgPDF = ws_bkg.pdf("bkgPDF")
+bkgPDFcheb = ws_bkg.pdf("bkgPDFcheb")
+multipdf = ws_bkg.pdf("multipdf")
 
 lumi_val = 19.52+16.81+41.48+59.83
 
-eff_sig = ROOT.RooRealVar("eff_sig","eff_sig", (1.754431953634491 + 1.4623609380020386 + 3.342346404776447 + 5.130534059544491)/0.0000001)
+eff_sig = ROOT.RooRealVar("eff_sig","eff_sig", ( 8.8815710992 )/0.0000001)
 BRvar   = ROOT.RooRealVar("BRvar","BRvar", 0.0000001,0.,0.000001)
 Nsig    = ROOT.RooFormulaVar("Nsig","@0*@1",ROOT.RooArgList(eff_sig,BRvar))
 
 Nbkg = ROOT.RooRealVar("Nbkg","Nbkg",800.,5.,3000.)
 
-tot_pdf = ROOT.RooAddPdf("tot_pdf","tot_pdf",ROOT.RooArgList(sigPDF,bkgPDF),ROOT.RooArgList(Nsig,Nbkg))
+tot_pdf = ROOT.RooAddPdf("tot_pdf","tot_pdf",ROOT.RooArgList(sigPDF,bkgPDFcheb),ROOT.RooArgList(Nsig,Nbkg))
 
-tot_pdf.fitTo(data_obs,ROOT.RooFit.Extended(1))
+#tot_pdf.fitTo(data_obs,ROOT.RooFit.Extended(1))
 
 xframe = M_ggg.frame(18)
 data_obs.plotOn(xframe)
@@ -38,19 +40,21 @@ tot_pdf.plotOn(xframe)
 canvas = ROOT.TCanvas()
 canvas.cd()
 xframe.Draw()
-canvas.SaveAs("plotsfit_alllineshape.pdf")
+canvas.SaveAs("plots/fit_alllineshape.pdf")
 
 _fileIn = ROOT.TFile("histos/ZThreeGamma_data.root")
 _treeIn = _fileIn.Get("minitree")
 data_obs = ROOT.RooDataSet("data_obs","dataset",ROOT.RooArgSet(M_ggg),ROOT.RooFit.Import(_treeIn))
 
-bkgPDF_norm = ROOT.RooRealVar("bkgPDF_norm","Nbkg",data_obs.numEntries(),1.,4000.)
+print data_obs.numEntries()
+
+bkgPDFcheb_norm = ROOT.RooRealVar("bkgPDFcheb_norm","Nbkg",data_obs.numEntries(),1.,4000.)
 
 ws = ROOT.RooWorkspace("ws")
 getattr(ws,'import')(data_obs)
 getattr(ws,'import')(sigPDF)
-getattr(ws,'import')(bkgPDF)
-getattr(ws,'import')(bkgPDF_norm)
+getattr(ws,'import')(bkgPDFcheb)
+getattr(ws,'import')(bkgPDFcheb_norm)
 
 _fOut = ROOT.TFile("workspaces/total_model.root","RECREATE")
 _fOut.cd()

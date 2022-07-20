@@ -86,7 +86,7 @@ class Workflow_Handler:
 		elif self.runningEra == 3:
 			ph_ID_scale_name = ph_ID_scale_name_2018
 			pixSeed_scale_name = pixSeed_scale_name_2018
-			self.lumi_norm = 59.83
+			self.lumi_norm = 54.4     #59.83   #beginning of 2018 didn't have the trigger
 
 		self.ph_ID_scale_file = ROOT.TFile(ph_ID_scale_name)
 		self.ph_ID_scale_TH = self.ph_ID_scale_file.Get("EGamma_SF2D")
@@ -175,7 +175,7 @@ class Workflow_Handler:
 	def get_xsec_norm(self, sample_name) :
 
 		if self.runningEra == 0 :
-			if "Signal" in sample_name : return float( (1981.0*0.0000001/0.033658) *1000./ (248.*400.))
+			if "Signal" in sample_name : return float( (1981.0*0.0000001/0.033658) *1000./ (249.*400.))
 			if "DYJetsToLL" in sample_name : return float( 6404.0 *1000./ (90947213. *(1.-2.*0.1643)))
 			if "ZGToLLG" in sample_name : return float( 55.48 *1000./ (23275543.*(1.-2.*0.1847)))
 			if "DiPhotonJets" in sample_name : return float( 126.2 *1000./ (2365165. *(1.-2.*0.2363)))
@@ -185,9 +185,11 @@ class Workflow_Handler:
 			if "GJets200To400" in sample_name : return float( 2183. *1000./ 19037560.)
 			if "GJets400To600" in sample_name : return float( 260.2 *1000./ 4338294.)
 			if "GJets600ToInf" in sample_name : return float( 86.58 *1000./ 4624766.)
+			if "GJetsDEM40To80" in sample_name : return float( 4850.0 *1000./ 10277195.)
+			if "GJetsDEM80ToInf" in sample_name : return float( 1268.0 *1000./ 22495323.)
 			if "GGG" in sample_name : return float( 8.681 *1000./ (200.*500.))
 		elif self.runningEra == 1 :
-			if "Signal" in sample_name : return float( (1981.0*0.0000001/0.033658) *1000./ (247.*400.))
+			if "Signal" in sample_name : return float( (1981.0*0.0000001/0.033658) *1000./ (250.*400.))
 			if "DYJetsToLL" in sample_name : return float( 6404.0 *1000./ (71839442.*(1.-2.*0.1643)))
 			if "ZGToLLG" in sample_name : return float( 55.48 *1000./ (31562465.*(1-2.*0.1847)))
 			if "DiPhotonJets" in sample_name : return float( 126.2 *1000./ (2420370. *(1.-2.*0.2363)))
@@ -197,9 +199,11 @@ class Workflow_Handler:
 			if "GJets200To400" in sample_name : return float( 2183. *1000./ 18315845.)
 			if "GJets400To600" in sample_name : return float( 260.2 *1000./ 4475962.)
 			if "GJets600ToInf" in sample_name : return float( 86.58 *1000./ 4366096.)
+			if "GJetsDEM40To80" in sample_name : return float( 4850.0 *1000./ 10512667.)
+			if "GJetsDEM80ToInf" in sample_name : return float( 1268.0 *1000./ 22495323.)
 			if "GGG" in sample_name : return float( 8.681 *1000./ (200.*500.))
 		elif self.runningEra == 2 :
-			if "Signal" in sample_name : return float( (1981.0*0.0000001/0.033658) *1000./ (250.*400.))
+			if "Signal" in sample_name : return float( (1981.0*0.0000001/0.033658) *1000./ (249.*400.))
 			if "DYJetsToLL" in sample_name : return float( 6404.0 *1000./ (195529774.*(1.-2.*0.1643)))
 			if "ZGToLLG" in sample_name : return float( 51.1 *1000./ (29890946.*(1-2.*0.1923)))
 			if "DiPhotonJets" in sample_name : return float( 82.51 *1000./ (29676800.))

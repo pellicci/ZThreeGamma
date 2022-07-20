@@ -13,18 +13,19 @@ iPos = 11
 CMS_lumi.lumiTextSize = 0.6
 CMS_lumi.cmsTextSize = 1.
 CMS_lumi.lumiTextOffset = 0.45
-CMS_lumi.lumi_13TeV = "137 fb^{-1}"
+CMS_lumi.lumi_13TeV = "132 fb^{-1}"
 
-signal_magnify = 100.
+signal_magnify = 10.
 CR_magnify = 1. #2079./1179.
 
-plotOnlyData = False
+plotOnlyData = True
 
 list_inputfiles = []
 #inputnames = ["Signal","data","GJets","ZGToLLG01J","DYJetsToLL","DiPhotonJets","GGG"]
+#inputnames = ["Signal","data","GJets","ZGToLLG01J","DYJetsToLL","GGG"]
 #inputnames = ["Signal","data","ZGToLLG01J","DYJetsToLL","CR3","GJets","CR2"]
 #inputnames = ["Signal","data","CR3","CR1","GGG"]
-inputnames = ["Signal","data","SB"]
+inputnames = ["Signal","data"]
 
 useSidebands = False
 if "SB" in inputnames :
@@ -95,8 +96,8 @@ for filename in list_inputfiles:
 		if not "h_N" in histo_name :
 			histo_container[-1].Rebin(2)
 
-		if histo_name == "h_threegammass" :
-			histo_container[-1].Rebin(2)
+		#if histo_name == "h_threegammass" :
+		#	histo_container[-1].Rebin(2)
 
 		if "Signal" in sample_name :
 			histo_container[-1].SetLineStyle(2)   #dashed
@@ -215,7 +216,7 @@ for histo_name in list_histos:
 			hstack[histo_name].GetXaxis().SetTitle("#eta_{3}")
 
 		if histo_name == "h_threegammass" :
-			#hstack[histo_name].SetMaximum(300.)
+			hstack[histo_name].SetMaximum(600.)
 			#hstack[histo_name].Rebin(2)
 			#hdata[histo_name].Rebin(2)
 		 	#hsignal[histo_name].Rebin(2)
@@ -226,11 +227,11 @@ for histo_name in list_histos:
 			hstack[histo_name].GetXaxis().SetTitle("r_{9,1}")
 
 		if histo_name == "h_r9_2" :
-			hstack[histo_name].SetMaximum(6000.)
+			hstack[histo_name].SetMaximum(8000.)
 			hstack[histo_name].GetXaxis().SetTitle("r_{9,2}")
 
 		if histo_name == "h_r9_3" :
-			hstack[histo_name].SetMaximum(4000.)
+			hstack[histo_name].SetMaximum(7000.)
 			hstack[histo_name].GetXaxis().SetTitle("r_{9,3}")
 
 		if histo_name == "h_hoe_1" :
@@ -260,14 +261,22 @@ for histo_name in list_histos:
 		if histo_name == "h_onetrk_pt" :
 			hstack[histo_name].GetXaxis().SetTitle("p_{T} (GeV)")
 
+		if histo_name == "h_sum_gam_ID" :
+			hstack[histo_name].GetXaxis().SetTitle("#Sigma ID_{i}")
+			hstack[histo_name].SetMaximum(7000.)
+
+		if histo_name == "h_Z_pt" :
+			hstack[histo_name].GetXaxis().SetTitle("p_{T} (GeV)")
+			hstack[histo_name].SetMaximum(4000.)
+
 		hstack[histo_name].Draw("SAME,histo")
 
 
 	if plotOnlyData :
 		hdata[histo_name].GetXaxis().SetTitle("m_{#gamma#gamma#gamma} (GeV)")
-		hdata[histo_name].SetMaximum(220.)
-		hdata[histo_name].Rebin(2)
-		hsignal[histo_name].Rebin(2)
+		hdata[histo_name].SetMaximum(350.)
+		#hdata[histo_name].Rebin(2)
+		#hsignal[histo_name].Rebin(2)
 		hdata[histo_name].Draw("E1,X0")
 		hsignal[histo_name].Draw("SAME,hist")
 	else :

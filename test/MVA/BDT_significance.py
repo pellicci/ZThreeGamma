@@ -8,8 +8,8 @@ BDT_file = ROOT.TFile("trained/Nominal_training.root")
 
 h_BDT_effB_effS = BDT_file.Get("default/Method_BDT/BDT/MVA_BDT_effBvsS")
 
-Nsig_passed = 2.
-Nbkg_passed = 3000.
+Nsig_passed = 10.
+Nbkg_passed = 2310.
 
 canvas1 = ROOT.TCanvas()
 sig_eff = []
@@ -18,7 +18,7 @@ signif = []
 _effS = 0
 
 for jbin in range(1,h_BDT_effB_effS.GetNbinsX()+1):
-	if h_BDT_effB_effS.GetBinCenter(jbin) > 0.3:
+	if h_BDT_effB_effS.GetBinCenter(jbin) > 0.2:
 		sig_eff.append(h_BDT_effB_effS.GetBinCenter(jbin))
 		if h_BDT_effB_effS.GetBinContent(jbin) < 0.:
 			bkg_eff.append(0.)
@@ -45,7 +45,7 @@ sign_vs_bkg = ROOT.TGraph(70,bkg_eff_array,signif_array)
 sign_vs_bkg.SetTitle("")
 sign_vs_bkg.GetXaxis().SetTitle("#varepsilon_{B}^{BDT}")
 sign_vs_bkg.GetYaxis().SetTitle("Z")
-sign_vs_bkg.GetXaxis().SetRangeUser(0.,0.02)
+#sign_vs_bkg.GetXaxis().SetRangeUser(0.,0.02)
 sign_vs_bkg.SetMaximum(0.20)
 sign_vs_bkg.SetMarkerStyle(8)
 sign_vs_bkg.SetMarkerColor(4)
@@ -68,5 +68,5 @@ for entry in xrange(h_BDT_effS.GetNbinsX()):
 	if effS == signif_maximizing_eff:
 		BDT_output =  h_BDT_effS.GetBinCenter(entry)
 		_effS = effS
-
+		break
 print "For a signal efficiency of ", _effS, "the BDT output is :", BDT_output

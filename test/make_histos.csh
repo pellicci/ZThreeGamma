@@ -22,6 +22,9 @@ rm histos/*
 #./histo_maker.py 0 0 1 0 finalSkim/ZThreeGamma_GJets400To600_0.root histos/ZThreeGamma_GJets400To600_0.root
 #./histo_maker.py 0 0 1 0 finalSkim/ZThreeGamma_GJets600ToInf_0.root histos/ZThreeGamma_GJets600ToInf_0.root
 
+#./histo_maker.py 0 0 1 0 finalSkim/ZThreeGamma_GJetsDEM40To80_0.root histos/ZThreeGamma_GJetsDEM40To80_0.root
+#./histo_maker.py 0 0 1 0 finalSkim/ZThreeGamma_GJetsDEM80ToInf_0.root histos/ZThreeGamma_GJetsDEM80ToInf_0.root
+
 #2016 simulation
 
 ./histo_maker.py 1 0 0 0 finalSkim/ZThreeGamma_Signal_1.root histos/ZThreeGamma_Signal_1.root
@@ -37,6 +40,9 @@ rm histos/*
 #./histo_maker.py 1 0 1 0 finalSkim/ZThreeGamma_GJets200To400_1.root histos/ZThreeGamma_GJets200To400_1.root
 #./histo_maker.py 1 0 1 0 finalSkim/ZThreeGamma_GJets400To600_1.root histos/ZThreeGamma_GJets400To600_1.root
 #./histo_maker.py 1 0 1 0 finalSkim/ZThreeGamma_GJets600ToInf_1.root histos/ZThreeGamma_GJets600ToInf_1.root
+
+#./histo_maker.py 0 0 1 0 finalSkim/ZThreeGamma_GJetsDEM40To80_1.root histos/ZThreeGamma_GJetsDEM40To80_1.root
+#./histo_maker.py 0 0 1 0 finalSkim/ZThreeGamma_GJetsDEM80ToInf_1.root histos/ZThreeGamma_GJetsDEM80ToInf_1.root
 
 #2017 simulation
 

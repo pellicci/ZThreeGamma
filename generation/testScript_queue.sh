@@ -2,9 +2,9 @@
 
 HOMEDIR=/afs/cern.ch/user/p/pellicci/work/ZThreeGamma/CMSSW_10_6_27/src/StandardModel/ZThreeGamma/generation
 CMSSW_TO_USE=CMSSW_10_6_26
-INPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2016/signal/preAPV/MINI/
-OUTPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2016/signal/preAPV/NANO/
-PYTHONAME=ZToThreeGamma_LHEGEN_2018_v9_cfg.py
+INPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2017/GGG/MINI/
+OUTPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2017/GGG/NANO/
+PYTHONAME=GGG_LHEGEN_2016_preAPV_v9_cfg.py
 
 echo "First argument is $1"
 
@@ -43,7 +43,7 @@ echo "jobnumber is $jobNumber"
 #MINI 2016 preAPV_v9
 #cmsDriver.py  --python_filename config_cfg.py --eventcontent MINIAODSIM --datatier MINIAODSIM --fileout file:process.root --conditions 106X_mcRun2_asymptotic_preVFP_v11 --step PAT --procModifiers run2_miniAOD_UL --geometry DB:Extended --filein file:processIN.root --era Run2_2016_HIPM --runUnscheduled --no_exec --mc -n -1
 #NANO 2016 preAPV_v9
-cmsDriver.py  --python_filename config_cfg.py --eventcontent NANOAODSIM --datatier NANOAODSIM --fileout file:process.root --conditions 106X_mcRun2_asymptotic_preVFP_v11 --step NANO --filein file:processIN.root --era Run2_2016_HIPM,run2_nanoAOD_106Xv2 --no_exec --mc -n -1
+#cmsDriver.py  --python_filename config_cfg.py --eventcontent NANOAODSIM --datatier NANOAODSIM --fileout file:process.root --conditions 106X_mcRun2_asymptotic_preVFP_v11 --step NANO --filein file:processIN.root --era Run2_2016_HIPM,run2_nanoAOD_106Xv2 --no_exec --mc -n -1
 
 #SIM 2016 postAPV_v9
 #cmsDriver.py  --python_filename config_cfg.py --eventcontent RAWSIM --datatier GEN-SIM --fileout file:process.root --conditions 106X_mcRun2_asymptotic_v13 --beamspot Realistic25ns13TeV2016Collision --step SIM --geometry DB:Extended --filein file:processIN.root --era Run2_2016 --runUnscheduled --no_exec --mc -n -1
@@ -69,7 +69,7 @@ cmsDriver.py  --python_filename config_cfg.py --eventcontent NANOAODSIM --datati
 #MINI 2017 v9
 #cmsDriver.py  --python_filename config_cfg.py --eventcontent MINIAODSIM --datatier MINIAODSIM --fileout file:process.root --conditions 106X_mc2017_realistic_v9 --step PAT --procModifiers run2_miniAOD_UL --geometry DB:Extended --filein file:processIN.root --era Run2_2017 --runUnscheduled --no_exec --mc -n -1
 #NANO 2017 v9
-#cmsDriver.py  --python_filename config_cfg.py --eventcontent NANOAODSIM --datatier NANOAODSIM --fileout file:process.root --conditions 106X_mc2017_realistic_v9 --step NANO --filein file:processIN.root --era Run2_2017,run2_nanoAOD_106Xv2 --no_exec --mc -n -1
+cmsDriver.py  --python_filename config_cfg.py --eventcontent NANOAODSIM --datatier NANOAODSIM --fileout file:process.root --conditions 106X_mc2017_realistic_v9 --step NANO --filein file:processIN.root --era Run2_2017,run2_nanoAOD_106Xv2 --no_exec --mc -n -1
 
 #SIM 2018 v9
 #cmsDriver.py  --python_filename config_cfg.py --eventcontent RAWSIM --datatier GEN-SIM --fileout file:process.root --conditions 106X_upgrade2018_realistic_v11_L1v1 --beamspot Realistic25ns13TeVEarly2018Collision --step SIM --geometry DB:Extended --filein file:processIN.root --era Run2_2018 --runUnscheduled --no_exec --mc -n -1

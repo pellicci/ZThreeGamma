@@ -62,72 +62,84 @@ samplesDict['2017'] = [
     ]
 
 samplesDict['2018'] = [ 
-    bm.JobConfig( dataset='/EGamma/Run2018A-UL2018_MiniAODv2_NanoAODv9-v1/NANOAOD',
-        nEvtPerJobIn1e6=nEvtPerJob, year="2018", isData=True, suffix='2018A_DoubleEG'),
-    bm.JobConfig( dataset='/EGamma/Run2018B-UL2018_MiniAODv2_NanoAODv9-v1/NANOAOD',
-        nEvtPerJobIn1e6=nEvtPerJob, year="2018", isData=True, suffix='2018B_DoubleEG'),
-    bm.JobConfig( dataset='/EGamma/Run2018C-UL2018_MiniAODv2_NanoAODv9-v1/NANOAOD',
-        nEvtPerJobIn1e6=nEvtPerJob, year="2018", isData=True, suffix='2018C_DoubleEG'),
-    bm.JobConfig( dataset='/EGamma/Run2018D-UL2018_MiniAODv2_NanoAODv9-v3/NANOAOD',
-        nEvtPerJobIn1e6=nEvtPerJob, year="2018", isData=True, suffix='2018D_DoubleEG')
+    #bm.JobConfig( dataset='/EGamma/Run2018A-UL2018_MiniAODv2_NanoAODv9-v1/NANOAOD',
+    #    nEvtPerJobIn1e6=nEvtPerJob, year="2018", isData=True, suffix='2018A_DoubleEG'),
+    #bm.JobConfig( dataset='/EGamma/Run2018B-UL2018_MiniAODv2_NanoAODv9-v1/NANOAOD',
+    #    nEvtPerJobIn1e6=nEvtPerJob, year="2018", isData=True, suffix='2018B_DoubleEG'),
+    #bm.JobConfig( dataset='/EGamma/Run2018C-UL2018_MiniAODv2_NanoAODv9-v1/NANOAOD',
+    #    nEvtPerJobIn1e6=nEvtPerJob, year="2018", isData=True, suffix='2018C_DoubleEG'),
+    #bm.JobConfig( dataset='/EGamma/Run2018D-UL2018_MiniAODv2_NanoAODv9-v3/NANOAOD',
+    #    nEvtPerJobIn1e6=nEvtPerJob, year="2018", isData=True, suffix='2018D_DoubleEG')
     ]
 
 samplesDict['2016_MC'] = [ 
-#    bm.JobConfig( dataset='/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1/NANOAODSIM',
-#        nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v1_DYJetsToLL'),
-#    bm.JobConfig( dataset='/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM',
-#        nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v2_DYJetsToLL'),
-#    bm.JobConfig( dataset='/ZGToLLG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1/NANOAODSIM',
-#        nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v1_ZGToLLG'),
-#    bm.JobConfig( dataset='/ZGToLLG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM',
-#        nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v2_ZGToLLG'),
-#    bm.JobConfig( dataset='/DiPhotonJets_MGG-80toInf_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1/NANOAODSIM',
-#        nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v1_DiPhotonJets'),
-#    bm.JobConfig( dataset='/DiPhotonJets_MGG-80toInf_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM',
-#        nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v2_DiPhotonJets'),
-#    bm.JobConfig( dataset='/DiPhotonJetsBox_M40_80-sherpa/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1/NANOAODSIM',
-#        nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v1_DiPhotonJets40'),
-    bm.JobConfig( dataset='/DiPhotonJetsBox_M40_80-sherpa/pellicci-crab_ZThreeGamma_Diphoton_2016v2-00000000000000000000000000000000/USER',
-        nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v2_DiPhotonJets40', inputDBS='phys03')
-#    bm.JobConfig( dataset='/GJets_HT-40To100_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1/NANOAODSIM',
-#        nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v1_GJets40To100'),
-#    bm.JobConfig( dataset='/GJets_HT-40To100_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM',
-#        nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v2_GJets40To100'),
-#    bm.JobConfig( dataset='/GJets_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODAPVv9-4cores5k_106X_mcRun2_asymptotic_preVFP_v11-v1/NANOAODSIM',
-#        nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v1_GJets100To200'),
-#    bm.JobConfig( dataset='/GJets_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODv9-4cores5k_106X_mcRun2_asymptotic_v17-v1/NANOAODSIM',
-#        nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v2_GJets100To200'),
-#    bm.JobConfig( dataset='/GJets_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1/NANOAODSIM',
-#        nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v1_GJets200To400'),
-#    bm.JobConfig( dataset='/GJets_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM',
-#        nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v2_GJets200To400'),
-#    bm.JobConfig( dataset='/GJets_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1/NANOAODSIM',
-#        nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v1_GJets400To600'),
-#    bm.JobConfig( dataset='/GJets_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM',
-#        nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v2_GJets400To600'),
-#    bm.JobConfig( dataset='/GJets_HT-600ToInf_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1/NANOAODSIM',
-#        nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v1_GJets600ToInf'),
-#    bm.JobConfig( dataset='/GJets_HT-600ToInf_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODv2-106X_mcRun2_asymptotic_v15-v1/NANOAODSIM',
-#        nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v2_GJets600ToInf')
+    # bm.JobConfig( dataset='/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1/NANOAODSIM',
+    #     nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v1_DYJetsToLL'),
+    # bm.JobConfig( dataset='/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM',
+    #     nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v2_DYJetsToLL'),
+    # bm.JobConfig( dataset='/ZGToLLG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1/NANOAODSIM',
+    #     nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v1_ZGToLLG'),
+    # bm.JobConfig( dataset='/ZGToLLG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM',
+    #     nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v2_ZGToLLG'),
+    # bm.JobConfig( dataset='/DiPhotonJets_MGG-80toInf_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1/NANOAODSIM',
+    #     nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v1_DiPhotonJets'),
+    # bm.JobConfig( dataset='/DiPhotonJets_MGG-80toInf_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM',
+    #     nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v2_DiPhotonJets'),
+    # bm.JobConfig( dataset='/DiPhotonJetsBox_M40_80-sherpa/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1/NANOAODSIM',
+    #     nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v1_DiPhotonJets40'),
+    # bm.JobConfig( dataset='/DiPhotonJetsBox_M40_80-sherpa/pellicci-crab_ZThreeGamma_Diphoton_2016v2-00000000000000000000000000000000/USER',
+    #     nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v2_DiPhotonJets40', inputDBS='phys03'),
+    # bm.JobConfig( dataset='/GJets_HT-40To100_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1/NANOAODSIM',
+    #     nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v1_GJets40To100'),
+    # bm.JobConfig( dataset='/GJets_HT-40To100_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM',
+    #     nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v2_GJets40To100'),
+    # bm.JobConfig( dataset='/GJets_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODAPVv9-4cores5k_106X_mcRun2_asymptotic_preVFP_v11-v1/NANOAODSIM',
+    #     nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v1_GJets100To200'),
+    # bm.JobConfig( dataset='/GJets_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODv9-4cores5k_106X_mcRun2_asymptotic_v17-v1/NANOAODSIM',
+    #     nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v2_GJets100To200'),
+    # bm.JobConfig( dataset='/GJets_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1/NANOAODSIM',
+    #     nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v1_GJets200To400'),
+    # bm.JobConfig( dataset='/GJets_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM',
+    #     nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v2_GJets200To400'),
+    # bm.JobConfig( dataset='/GJets_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1/NANOAODSIM',
+    #     nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v1_GJets400To600'),
+    # bm.JobConfig( dataset='/GJets_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM',
+    #     nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v2_GJets400To600'),
+    # bm.JobConfig( dataset='/GJets_HT-600ToInf_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1/NANOAODSIM',
+    #     nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v1_GJets600ToInf'),
+    # bm.JobConfig( dataset='/GJets_HT-600ToInf_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODv2-106X_mcRun2_asymptotic_v15-v1/NANOAODSIM',
+    #     nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v2_GJets600ToInf'),
+    bm.JobConfig( dataset='/GJets_DoubleEMEnriched_PtG-20MGG-40To80_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v2/NANOAODSIM',
+        nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v1_GJetsDEM40To80'),
+    bm.JobConfig( dataset='/GJets_DoubleEMEnriched_PtG-20MGG-40To80_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v2/NANOAODSIM',
+        nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v2_GJetsDEM40To80'),
+    bm.JobConfig( dataset='/GJets_DoubleEMEnriched_PtG-40MGG-80_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v2/NANOAODSIM',
+        nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v1_GJetsDEM80ToInf'),
+    bm.JobConfig( dataset='/GJets_DoubleEMEnriched_PtG-40MGG-80_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v2/NANOAODSIM',
+        nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v2_GJetsDEM80ToInf'),
+    bm.JobConfig( dataset='/QCD_Pt-40ToInf_DoubleEMEnriched_MGG-80ToInf_TuneCP5_13TeV-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1/NANOAODSIM',
+        nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v1_QCDDEM80ToInf'),
+    bm.JobConfig( dataset='/QCD_Pt-40ToInf_DoubleEMEnriched_MGG-80ToInf_TuneCP5_13TeV-pythia8/RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1/NANOAODSIM',
+        nEvtPerJobIn1e6=nEvtPerJob, year="2016", isData=False, suffix='2016v2_QCDDEM80ToInf')
     ]
 
 samplesDict['2017_MC'] = [ 
-#    bm.JobConfig( dataset='/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v2/NANOAODSIM',
-#        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=False, suffix='2017_DYJetsToLL'),
-#    bm.JobConfig( dataset='/ZGToLLG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1/NANOAODSIM',
-#        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=False, suffix='2017_ZGToLLG'),
-#    bm.JobConfig( dataset='/DiPhotonJetsBox_MGG-80toInf_13TeV-sherpa/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1/NANOAODSIM',
-#        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=False, suffix='2017_DiPhotonJets'),
+    bm.JobConfig( dataset='/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v2/NANOAODSIM',
+        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=False, suffix='2017_DYJetsToLL'),
+    bm.JobConfig( dataset='/ZGToLLG_01J_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1/NANOAODSIM',
+        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=False, suffix='2017_ZGToLLG'),
+    bm.JobConfig( dataset='/DiPhotonJetsBox_MGG-80toInf_13TeV-sherpa/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1/NANOAODSIM',
+        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=False, suffix='2017_DiPhotonJets'),
     bm.JobConfig( dataset='/DiPhotonJetsBox_M40_80-sherpa/pellicci-crab_ZThreeGamma_Diphoton_2017-00000000000000000000000000000000/USER',
-        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=False, suffix='2017_DiPhotonJets40', inputDBS='phys03')
-#    bm.JobConfig( dataset='/GJets_DR-0p4_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1/NANOAODSIM',
-#        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=False, suffix='2017_GJets100To200'),
-#    bm.JobConfig( dataset='/GJets_DR-0p4_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1/NANOAODSIM',
-#        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=False, suffix='2017_GJets200To400'),
-#    bm.JobConfig( dataset='/GJets_DR-0p4_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1/NANOAODSIM',
-#        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=False, suffix='2017_GJets400To600'),
-#    bm.JobConfig( dataset='/GJets_DR-0p4_HT-600ToInf_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1/NANOAODSIM',
-#        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=False, suffix='2017_GJets600ToInf')
+        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=False, suffix='2017_DiPhotonJets40', inputDBS='phys03'),
+    bm.JobConfig( dataset='/GJets_DR-0p4_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1/NANOAODSIM',
+        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=False, suffix='2017_GJets100To200'),
+    bm.JobConfig( dataset='/GJets_DR-0p4_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1/NANOAODSIM',
+        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=False, suffix='2017_GJets200To400'),
+    bm.JobConfig( dataset='/GJets_DR-0p4_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1/NANOAODSIM',
+        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=False, suffix='2017_GJets400To600'),
+    bm.JobConfig( dataset='/GJets_DR-0p4_HT-600ToInf_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1/NANOAODSIM',
+        nEvtPerJobIn1e6=nEvtPerJob, year="2017", isData=False, suffix='2017_GJets600ToInf')
     ]
 
 samplesDict['2018_MC'] = [ 
@@ -155,7 +167,7 @@ samplesDict['2018_MC'] = [
 samplesToSubmit = samplesDict.keys()
 samplesToSubmit.sort()
 #doYears = ["2016", "2017", "2018"]
-doYears = ["2016","2017"]
+doYears = ["2016"]
 configs = []
 
 for s in samplesToSubmit:
