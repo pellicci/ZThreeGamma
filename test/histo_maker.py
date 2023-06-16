@@ -167,6 +167,12 @@ fOut.cd()
 _phot1_pt      = array('f', [0.])
 _phot2_pt      = array('f', [0.])
 _phot3_pt      = array('f', [0.])
+_phot1_eta     = array('f', [0.])
+_phot2_eta     = array('f', [0.])
+_phot3_eta     = array('f', [0.])
+_phot1_phi     = array('f', [0.])
+_phot2_phi     = array('f', [0.])
+_phot3_phi     = array('f', [0.])
 _phot1_hoe     = array('f', [0.])
 _phot2_hoe     = array('f', [0.])
 _phot3_hoe     = array('f', [0.])
@@ -186,8 +192,14 @@ _Event_Weight  = array('f', [0.])
 minitree = ROOT.TTree('minitree','tree with branches')
 
 minitree.Branch('Phot1_ET',_phot1_pt,'Phot1_ET/F')
-minitree.Branch('Phot2_ET',_phot1_pt,'Phot2_ET/F')
-minitree.Branch('Phot3_ET',_phot1_pt,'Phot3_ET/F')
+minitree.Branch('Phot2_ET',_phot2_pt,'Phot2_ET/F')
+minitree.Branch('Phot3_ET',_phot3_pt,'Phot3_ET/F')
+minitree.Branch('Phot1_eta',_phot1_eta,'Phot1_eta/F')
+minitree.Branch('Phot2_eta',_phot2_eta,'Phot2_eta/F')
+minitree.Branch('Phot3_eta',_phot3_eta,'Phot3_eta/F')
+minitree.Branch('Phot1_phi',_phot1_phi,'Phot1_phi/F')
+minitree.Branch('Phot2_phi',_phot2_phi,'Phot2_phi/F')
+minitree.Branch('Phot3_phi',_phot3_phi,'Phot3_phi/F')
 minitree.Branch('Phot1_hoe',_phot1_hoe,'Phot1_hoe/F')
 minitree.Branch('Phot2_hoe',_phot2_hoe,'Phot2_hoe/F')
 minitree.Branch('Phot3_hoe',_phot3_hoe,'Phot3_hoe/F')
@@ -426,6 +438,12 @@ for jentry in xrange(nentries):
 	_phot1_pt[0]  = phot1_pt
 	_phot2_pt[0]  = phot2_pt
 	_phot3_pt[0]  = phot3_pt
+	_phot1_eta[0] = phot1_eta
+	_phot2_eta[0] = phot2_eta
+	_phot3_eta[0] = phot3_eta
+	_phot1_phi[0] = phot1_phi
+	_phot2_phi[0] = phot2_phi
+	_phot3_phi[0] = phot3_phi
 	_phot1_hoe[0]     = phot1_hoe
 	_phot2_hoe[0]     = phot2_hoe
 	_phot3_hoe[0]     = phot3_hoe
