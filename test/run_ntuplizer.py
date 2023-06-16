@@ -27,6 +27,8 @@ elif "2017" in tmp_runningEra :
     myrunningEra = 2
 elif "2018" in tmp_runningEra :
     myrunningEra = 3
+elif "2022" in tmp_runningEra :
+    myrunningEra = 4
 print "Running era is ", myrunningEra
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
@@ -129,7 +131,7 @@ class exampleProducer(Module):
         if self.runningEra == 2 and not HLT.Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55 :
             return False
 
-        if self.runningEra == 3 and not HLT.Diphoton30_18_R9IdL_AND_HE_AND_IsoCaloId_NoPixelVeto :
+        if self.runningEra > 2 and not HLT.Diphoton30_18_R9IdL_AND_HE_AND_IsoCaloId_NoPixelVeto :
             return False
 
         self.histcount.Fill(1)

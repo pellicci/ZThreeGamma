@@ -23,8 +23,8 @@ fi
 ### Transfer files, prepare directory ###
 TOPDIR=$PWD
 
-export SCRAM_ARCH=slc7_amd64_gcc700
-export CMSSW_VERSION=CMSSW_10_6_27
+export SCRAM_ARCH=slc7_amd64_gcc10
+export CMSSW_VERSION=CMSSW_12_6_0_patch1
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 
 # temporary fix
