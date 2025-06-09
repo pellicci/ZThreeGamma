@@ -7,4 +7,4 @@ log                     = logs/run_ZThreeGamma_$(ProcID).log
 periodic_remove         = JobStatus == 5  
 WhenToTransferOutput    = ON_EXIT_OR_EVICT 
 
-Queue 250
+Queue 100

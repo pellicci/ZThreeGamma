@@ -1,10 +1,10 @@
 #!/bin/bash
 
-HOMEDIR=/afs/cern.ch/user/p/pellicci/work/ZThreeGamma/CMSSW_10_6_27/src/StandardModel/ZThreeGamma/generation
-CMSSW_TO_USE=CMSSW_10_6_26
-INPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2017/GGG/MINI/
-OUTPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2017/GGG/NANO/
-PYTHONAME=GGG_LHEGEN_2016_preAPV_v9_cfg.py
+HOMEDIR=/afs/cern.ch/user/p/pellicci/work/ZThreeGamma/Production/Run3/CMSSW_12_4_14_patch3/src/StandardModel/ZThreeGamma/generation
+CMSSW_TO_USE=CMSSW_12_4_14_patch3
+INPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2012/signal/LHCGEN/
+OUTPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2022/signal/RAW/
+PYTHONAME=ZToThreeGamma_LHEGENSIM_2022_cfg.py
 
 echo "First argument is $1"
 
@@ -15,7 +15,7 @@ export HOME=/afs/cern.ch/user/p/pellicci
 export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch
 source $VO_CMS_SW_DIR/cmsset_default.sh
 
-export SCRAM_ARCH=slc7_amd64_gcc820
+export SCRAM_ARCH=el8_amd64_gcc10
 if [ -r $CMSSW_TO_USE/src ] ; then 
  echo release $CMSSW_TO_USE already exists
 else
@@ -69,7 +69,7 @@ echo "jobnumber is $jobNumber"
 #MINI 2017 v9
 #cmsDriver.py  --python_filename config_cfg.py --eventcontent MINIAODSIM --datatier MINIAODSIM --fileout file:process.root --conditions 106X_mc2017_realistic_v9 --step PAT --procModifiers run2_miniAOD_UL --geometry DB:Extended --filein file:processIN.root --era Run2_2017 --runUnscheduled --no_exec --mc -n -1
 #NANO 2017 v9
-cmsDriver.py  --python_filename config_cfg.py --eventcontent NANOAODSIM --datatier NANOAODSIM --fileout file:process.root --conditions 106X_mc2017_realistic_v9 --step NANO --filein file:processIN.root --era Run2_2017,run2_nanoAOD_106Xv2 --no_exec --mc -n -1
+#cmsDriver.py  --python_filename config_cfg.py --eventcontent NANOAODSIM --datatier NANOAODSIM --fileout file:process.root --conditions 106X_mc2017_realistic_v9 --step NANO --filein file:processIN.root --era Run2_2017,run2_nanoAOD_106Xv2 --no_exec --mc -n -1
 
 #SIM 2018 v9
 #cmsDriver.py  --python_filename config_cfg.py --eventcontent RAWSIM --datatier GEN-SIM --fileout file:process.root --conditions 106X_upgrade2018_realistic_v11_L1v1 --beamspot Realistic25ns13TeVEarly2018Collision --step SIM --geometry DB:Extended --filein file:processIN.root --era Run2_2018 --runUnscheduled --no_exec --mc -n -1
@@ -84,11 +84,15 @@ cmsDriver.py  --python_filename config_cfg.py --eventcontent NANOAODSIM --datati
 #NANO 2018 v9
 #cmsDriver.py  --python_filename config_cfg.py --eventcontent NANOAODSIM --datatier NANOAODSIM --fileout file:process.root --conditions 106X_upgrade2018_realistic_v16_L1v1 --step NANO --filein file:processIN.root --era Run2_2018,run2_nanoAOD_106Xv2 --no_exec --mc -n -1
 
-#cat << EOF >> config_cfg.py
-#from IOMC.RandomEngine.RandomServiceHelper import RandomNumberServiceHelper
-#randSvc = RandomNumberServiceHelper(process.RandomNumberGeneratorService)
-#randSvc.populate()
-#EOF
+#RAW 2022
+cmsDriver.py  --python_filename config_cfg.py --eventcontent PREMIXRAW --datatier GEN-SIM-RAW --fileout file:process.root --conditions 124X_mcRun3_2022_realistic_v12 --step DIGI,DATAMIX,L1,DIGI2RAW,HLT:2022v12 --procModifiers premix_stage2,siPixelQualityRawToDigi --geometry DB:Extended --filein file:processIN.root --datamix PreMix --era Run3 --pileup_input "dbs:/Neutrino_E-10_gun/Run3Summer21PrePremix-Summer22_124X_mcRun3_2022_realistic_v11-v2/PREMIX" --no_exec --mc -n -1
+
+
+cat << EOF >> config_cfg.py
+from IOMC.RandomEngine.RandomServiceHelper import RandomNumberServiceHelper
+randSvc = RandomNumberServiceHelper(process.RandomNumberGeneratorService)
+randSvc.populate()
+EOF
 
 tail -50 config_cfg.py
 
