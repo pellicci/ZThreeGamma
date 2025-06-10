@@ -2,13 +2,15 @@
 
 HOMEDIR=/afs/cern.ch/user/p/pellicci/work/ZThreeGamma/Production/Run3/CMSSW_12_4_14_patch3/src/StandardModel/ZThreeGamma/generation
 CMSSW_TO_USE=CMSSW_12_4_14_patch3
-INPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2012/signal/LHCGEN/
+INPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2022/signal/LHCGEN/
 OUTPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2022/signal/RAW/
 PYTHONAME=ZToThreeGamma_LHEGENSIM_2022_cfg.py
 
 echo "First argument is $1"
 
 #this is necessary only if EOS access is required
+export APPTAINER_BINDPATH='/afs,/cvmfs,/cvmfs/grid.cern.ch/etc/grid-security:/etc/grid-security,/eos,/etc/pki/ca-trust,/run/user,/var/run/user'
+
 export X509_USER_PROXY=/afs/cern.ch/user/p/pellicci/voms_proxy/x509up_u28550
 export HOME=/afs/cern.ch/user/p/pellicci
 
@@ -25,6 +27,7 @@ cd $CMSSW_TO_USE/src
 eval `scram runtime -sh`
 echo "check ld_library_path = $LD_LIBRARY_PATH"
 
+cp $HOMEDIR/fileslist_Neutrino_E-10_gun_2022.txt fileslist_Neutrino_E-10_gun_2022.txt 
 cp $HOMEDIR/$PYTHONAME config_cfg.py
 scram b
 
@@ -85,7 +88,7 @@ echo "jobnumber is $jobNumber"
 #cmsDriver.py  --python_filename config_cfg.py --eventcontent NANOAODSIM --datatier NANOAODSIM --fileout file:process.root --conditions 106X_upgrade2018_realistic_v16_L1v1 --step NANO --filein file:processIN.root --era Run2_2018,run2_nanoAOD_106Xv2 --no_exec --mc -n -1
 
 #RAW 2022
-cmsDriver.py  --python_filename config_cfg.py --eventcontent PREMIXRAW --datatier GEN-SIM-RAW --fileout file:process.root --conditions 124X_mcRun3_2022_realistic_v12 --step DIGI,DATAMIX,L1,DIGI2RAW,HLT:2022v12 --procModifiers premix_stage2,siPixelQualityRawToDigi --geometry DB:Extended --filein file:processIN.root --datamix PreMix --era Run3 --pileup_input "dbs:/Neutrino_E-10_gun/Run3Summer21PrePremix-Summer22_124X_mcRun3_2022_realistic_v11-v2/PREMIX" --no_exec --mc -n -1
+cmsDriver.py  --python_filename config_cfg.py --eventcontent PREMIXRAW --datatier GEN-SIM-RAW --fileout file:process.root --conditions 124X_mcRun3_2022_realistic_v12 --step DIGI,DATAMIX,L1,DIGI2RAW,HLT:2022v12 --procModifiers premix_stage2,siPixelQualityRawToDigi --geometry DB:Extended --filein file:processIN.root --datamix PreMix --era Run3 --pileup_input "filelist:fileslist_Neutrino_E-10_gun_2022.txt" --no_exec --mc -n -1
 
 
 cat << EOF >> config_cfg.py

@@ -6,5 +6,6 @@ log                     = logs/run_ZThreeGamma_$(ProcID).log
 +JobFlavour             = "workday"
 periodic_remove         = JobStatus == 5  
 WhenToTransferOutput    = ON_EXIT_OR_EVICT 
+MY.WantOS 				= "el8"
 
 Queue 100
