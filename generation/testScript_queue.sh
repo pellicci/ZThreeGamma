@@ -1,9 +1,9 @@
 #!/bin/bash
 
 HOMEDIR=/afs/cern.ch/user/p/pellicci/work/ZThreeGamma/Production/Run3/CMSSW_12_4_14_patch3/src/StandardModel/ZThreeGamma/generation
-CMSSW_TO_USE=CMSSW_12_4_14_patch3
-INPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2022/signal/RAW/
-OUTPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2022/signal/RECO/
+CMSSW_TO_USE=CMSSW_13_3_1
+INPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2022/signal/MINI/
+OUTPUTDIR=/eos/user/p/pellicci/ZThreeGamma_root/2022/signal/NANO/
 PYTHONAME=ZToThreeGamma_LHEGENSIM_2022_cfg.py
 
 echo "First argument is $1"
@@ -17,7 +17,7 @@ export HOME=/afs/cern.ch/user/p/pellicci
 export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch
 source $VO_CMS_SW_DIR/cmsset_default.sh
 
-export SCRAM_ARCH=el8_amd64_gcc10
+export SCRAM_ARCH=el8_amd64_gcc11
 if [ -r $CMSSW_TO_USE/src ] ; then 
  echo release $CMSSW_TO_USE already exists
 else
@@ -90,7 +90,11 @@ echo "jobnumber is $jobNumber"
 #RAW 2022
 #cmsDriver.py --python_filename config_cfg.py --eventcontent PREMIXRAW --datatier GEN-SIM-RAW --fileout file:process.root --conditions 124X_mcRun3_2022_realistic_v12 --step DIGI,DATAMIX,L1,DIGI2RAW,HLT:2022v12 --procModifiers premix_stage2,siPixelQualityRawToDigi --geometry DB:Extended --filein file:processIN.root --datamix PreMix --era Run3 --pileup_input "filelist:fileslist_Neutrino_E-10_gun_2022.txt" --no_exec --mc -n -1
 #RECO 2022
-cmsDriver.py --python_filename config_cfg.py --eventcontent AODSIM --datatier AODSIM --fileout file:process.root --conditions 124X_mcRun3_2022_realistic_v12 --step RAW2DIGI,L1Reco,RECO,RECOSIM --procModifiers siPixelQualityRawToDigi --geometry DB:Extended --filein file:processIN.root --era Run3 --no_exec --mc -n -1
+#cmsDriver.py --python_filename config_cfg.py --eventcontent AODSIM --datatier AODSIM --fileout file:process.root --conditions 124X_mcRun3_2022_realistic_v12 --step RAW2DIGI,L1Reco,RECO,RECOSIM --procModifiers siPixelQualityRawToDigi --geometry DB:Extended --filein file:processIN.root --era Run3 --no_exec --mc -n -1
+#MINI 2022
+#cmsDriver.py --python_filename config_cfg.py --eventcontent MINIAODSIM --datatier MINIAODSIM --fileout file:process.root --conditions 130X_mcRun3_2022_realistic_v5 --step PAT --geometry DB:Extended --filein file:processIN.root --era Run3,run3_miniAOD_12X  --no_exec --mc -n -1
+#NANO 2022
+cmsDriver.py --python_filename config_cfg.py --eventcontent NANOEDMAODSIM --datatier NANOAODSIM --fileout file:process.root --conditions 130X_mcRun3_2022_realistic_v5 --step NANO --scenario pp --era Run3 --filein file:processIN.root --no_exec --mc -n -1
 
 cat << EOF >> config_cfg.py
 from IOMC.RandomEngine.RandomServiceHelper import RandomNumberServiceHelper
