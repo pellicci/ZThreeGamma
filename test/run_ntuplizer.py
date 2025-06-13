@@ -3,6 +3,13 @@ import os
 import sys
 import ROOT
 
+from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
+from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection 
+from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Object
+from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
+
+import correctionlib
+
 inputfile = []
 if len(sys.argv) > 3 :
     inputfile = [sys.argv[3]]
@@ -31,15 +38,7 @@ elif "2022" in tmp_runningEra :
     myrunningEra = 4
 print "Running era is ", myrunningEra
 
-from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
-
 ROOT.PyConfig.IgnoreCommandLineOptions = True
-
-from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection 
-from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Object
-from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
-
-from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer import *
 
 class exampleProducer(Module):
     def __init__(self, runningEra):
@@ -82,6 +81,7 @@ class exampleProducer(Module):
         self.histcount.Write()
         self.photoncount.Write()
         pass
+
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
@@ -209,16 +209,7 @@ class exampleProducer(Module):
 
         return True
 
-if isData :
-    p=PostProcessor(".",inputfile,"",modules=[exampleProducer(myrunningEra)],provenance=True,fwkJobReport=True,outputbranchsel="keep_and_drop.txt")
-    p.run()
-else :
-    if myrunningEra < 2 :
-        p=PostProcessor(".",inputfile,"",modules=[exampleProducer(myrunningEra),puAutoWeight_2016()],provenance=True,fwkJobReport=True,outputbranchsel="keep_and_drop.txt")
-    elif myrunningEra == 2 :
-        p=PostProcessor(".",inputfile,"",modules=[exampleProducer(myrunningEra),puAutoWeight_2017()],provenance=True,fwkJobReport=True,outputbranchsel="keep_and_drop.txt")
-    elif myrunningEra == 3 :
-        p=PostProcessor(".",inputfile,"",modules=[exampleProducer(myrunningEra),puAutoWeight_2018()],provenance=True,fwkJobReport=True,outputbranchsel="keep_and_drop.txt")
-    p.run()
+p=PostProcessor(".",inputfile,"",modules=[exampleProducer(myrunningEra)],provenance=True,fwkJobReport=True,outputbranchsel="keep_and_drop.txt")
+p.run()
 
 print "DONE"
